@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.7 — 2026-10-28
+
+A logo.
+
+- Quantarium's mark is a Q around three candlesticks, its tail a check mark: the referee that checks whether a result holds up. It replaces the plain "Q" tile in the app's sidebar and on the tutorial's title screen, becomes the browser tab's icon, and heads the README (`quantarium/assets/app/logo.svg`, `docs/images/logo.svg` and `logo.png`).
+- `tests/test_branding.py` checks that the served SVG holds no script, event handler, or external reference.
+
+**Results change:** None.
+
 ## v1.0.6 — 2026-10-27
 
 Review of v1.0.5 and the final check before the public release.

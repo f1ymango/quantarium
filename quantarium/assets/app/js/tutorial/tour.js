@@ -279,7 +279,7 @@ function geometry(element) {
 function TitleCard({ onBegin, onSkip, busy }) {
   return html`<div class="tour-screen" role="dialog" aria-modal="true" aria-labelledby="tour-title">
     <div class="tour-card tour-title-card">
-      <div class="tour-logo" aria-hidden="true">Q</div>
+      <img class="tour-logo" src="/logo.svg" alt="" aria-hidden="true" />
       <span class="eyebrow">Welcome</span>
       <h1 id="tour-title">Quantarium</h1>
       <p class="tour-lead">A lab for trading algorithms. Each one lives in a <strong>cell</strong> with its own simulated account. Nothing here touches real money.</p>

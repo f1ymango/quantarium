@@ -130,7 +130,7 @@ function App() {
 
   return html`<div class=${`shell ${collapsed ? "collapsed" : ""} ${menuOpen ? "open" : ""}`}>
     <nav class="sidebar" aria-label="Main">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">Q</span><span class="brand-name">Quantarium</span></div>
+      <div class="brand"><img class="brand-mark" src="/logo.svg" alt="" aria-hidden="true" /><span class="brand-name">Quantarium</span></div>
       ${NAV.map((item) => html`<a data-tour-nav=${item.path} class=${`nav-item ${current === item.path ? "active" : ""}`} href=${`#/${item.path}`}
           title=${collapsed ? item.label : undefined} aria-current=${current === item.path ? "page" : undefined}>
           <span class="nav-icon"><${Icon} name=${item.icon} /></span><span class="nav-label">${item.label}</span>

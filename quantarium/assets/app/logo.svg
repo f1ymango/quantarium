@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Quantarium">
+  <title>Quantarium</title>
+  <rect width="128" height="128" rx="28" fill="#14183A"/>
+  <circle cx="58" cy="58" r="36" fill="none" stroke="#2DD4BF" stroke-width="10"/>
+  <line x1="43" y1="45" x2="43" y2="73" stroke="#E0E7FF" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="38.5" y="51" width="9" height="15" rx="2" fill="#E0E7FF"/>
+  <line x1="58" y1="36" x2="58" y2="66" stroke="#E0E7FF" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="53.5" y="42" width="9" height="17" rx="2" fill="#E0E7FF"/>
+  <line x1="73" y1="40" x2="73" y2="64" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="68.5" y="44" width="9" height="13" rx="2" fill="#FBBF24"/>
+  <polyline points="76,98 89,111 115,78" fill="none" stroke="#FBBF24" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
