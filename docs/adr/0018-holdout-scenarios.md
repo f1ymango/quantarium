@@ -2,17 +2,17 @@
 
 - **Status:** Accepted (Part 13 of the [v0.3.0 plan](../plans/v0.3.0-agent-interface.md))
 - **Date:** 2026-10-21
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 
 ## Context
 
-An agent can simulate hundreds of variants in minutes. The best of many tries always looks better than it will do going forward: it fits the noise in the scenarios it was tuned on. Barloom can't stop an agent from searching, but it can do two things. It can keep an honest test set out of the agent's reach, and it can tell the user, and the model, how hard the search was.
+An agent can simulate hundreds of variants in minutes. The best of many tries always looks better than it will do going forward: it fits the noise in the scenarios it was tuned on. Quantarium can't stop an agent from searching, but it can do two things. It can keep an honest test set out of the agent's reach, and it can tell the user, and the model, how hard the search was.
 
 ## Decision
 
 **Holdout scenarios.**
 
-- The user marks scenarios as holdout on their Scenario page (`scenario-holdout`, which only the app can call). The list lives in `.barloom/holdout.json`, out of agent reach.
+- The user marks scenarios as holdout on their Scenario page (`scenario-holdout`, which only the app can call). The list lives in `.quantarium/holdout.json`, out of agent reach.
 - For agent requests, the server refuses with `403 holdout` anything that would read, run on, or reveal a holdout scenario:
   - any path parameter inside a holdout scenario folder: scenario reads, transforms, suites, Static runs on its prices, proposals;
   - suite reports and suite runs whose configs include a holdout scenario;
@@ -24,7 +24,7 @@ An agent can simulate hundreds of variants in minutes. The best of many tries al
 
 **One holdout test per cell version.** An agent may file a `holdout-test` proposal naming cells.
 
-- When approved, Barloom runs a suite on all holdout scenarios and records each cell's settings fingerprint.
+- When approved, Quantarium runs a suite on all holdout scenarios and records each cell's settings fingerprint.
 - A second test of the same settings is refused (`holdout_used`). Changing the cell makes a new variant, which may be tested once.
 - Only the user sees the results. The agent learns only that the proposal was approved and which job ran.
 

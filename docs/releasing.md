@@ -26,9 +26,9 @@ Delete any old `build/` folder first, since setuptools copies its stale files in
 
 ## Check
 
-- The wheel holds `quantarium/` (about 111 files), `barloom/` (2 files), and the `dist-info` folder with `LICENSE.md` and `NOTICE`; nothing from `runs/`, `.quantarium/`, `private/`, or `__pycache__`.
+- The wheel holds `quantarium/` (about 111 files), the 2-file alias package for imports written before 1.0, and the `dist-info` folder with `LICENSE.md` and `NOTICE`; nothing from `runs/`, `.quantarium/`, `private/`, or `__pycache__`.
 - The source archive holds the package, the alias, the license files, the README, and `pyproject.toml`; no tests (`MANIFEST.in`).
-- Install the wheel with `tzdata` into a new, empty virtual environment and run it from a folder outside the repository: `quantarium --version`, `quantarium run examples/experiment.json` (with a copy of `examples/`), `quantarium data check examples/data/fictional_index`, `python -c "import barloom.model"`, and `quantarium serve --fresh` with the app opened in a browser.
+- Install the wheel with `tzdata` into a new, empty virtual environment and run it from a folder outside the repository: `quantarium --version`, `quantarium run examples/experiment.json` (with a copy of `examples/`), `quantarium data check examples/data/fictional_index`, and `quantarium serve --fresh` with the app opened in a browser.
 - Run the secret and personal-data scan on everything that goes out.
 
 ## Publish

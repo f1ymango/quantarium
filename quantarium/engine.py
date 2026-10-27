@@ -56,7 +56,7 @@ def _load_strategy(entrypoint: str, parameters: dict[str, Any], root: Path, *,
     process. With ``sandbox_unreviewed`` (Static simulations only) they run in
     the sandbox; otherwise loading them is refused.
     """
-    # Configs and Lab records written before 1.0 name Barloom's modules and hidden folder.
+    # Configs and Lab records written before 1.0 name the pre-1.0 modules and hidden folder.
     entrypoint, parameters = current_entrypoint(entrypoint), current_value(parameters)
     if ":" not in entrypoint:
         raise ValueError(f"Strategy entrypoint must be module:Class: {entrypoint}")

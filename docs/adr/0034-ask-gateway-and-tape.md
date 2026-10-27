@@ -2,7 +2,7 @@
 
 - **Status:** Accepted for v0.4.4
 - **Date:** 2026-10-23
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 - **Draft:** ChatGPT (commit `880ab98`); reviewed and completed by Claude
 
 ADR-0033 is used by an unmerged collaborator branch, so this record is 0034.
@@ -12,18 +12,18 @@ ADR-0033 is used by an unmerged collaborator branch, so this record is 0034.
 Supercells may let a language model inform a strategy's decisions ([plan](../plans/v0.4.x-lab-and-supercells.md), section 3.7). Four risks come with that:
 
 - a script with network access and keys would break the sandbox;
-- model answers vary between calls, which breaks Barloom's "same input, same result";
+- model answers vary between calls, which breaks Quantarium's "same input, same result";
 - a backtest can make thousands of paid calls;
 - a model may remember the history it is tested on.
 
 ## Decision
 
-**One sanctioned path.** A strategy calls `context.ask(prompt, schema)`. Barloom makes the call through one of the user's model API connections (ADR-0021), with no tools, and returns only an answer that matches the schema. In the sandbox, the request crosses the existing pipe to the parent process, so sandboxed agent code still has no network access or keys. Reviewed user scripts run as ordinary local Python, so the gateway is their sanctioned path, not a containment boundary.
+**One sanctioned path.** A strategy calls `context.ask(prompt, schema)`. Quantarium makes the call through one of the user's model API connections (ADR-0021), with no tools, and returns only an answer that matches the schema. In the sandbox, the request crosses the existing pipe to the parent process, so sandboxed agent code still has no network access or keys. Reviewed user scripts run as ordinary local Python, so the gateway is their sanctioned path, not a containment boundary.
 
 **A grant per cell, from the user only.** A cell's `spec.ask` names:
 
 - the connection and the pinned model;
-- the tape file under `.barloom/tapes/`;
+- the tape file under `.quantarium/tapes/`;
 - `record` or `replay` mode;
 - the SHA-256 of the one script allowed to ask;
 - budgets: calls, tokens, estimated cost, and output tokens per call;
@@ -70,6 +70,6 @@ These rules apply to the grant:
 ## Consequences
 
 - A backtest's model answers are reproducible and auditable from its tape, and replays cost nothing.
-- Answers on the tape are only as trustworthy as the model and prompt that produced them. Barloom checks their shape, not their sense.
-- Estimated cost uses the per-million prices typed into the grant; Barloom does not know providers' prices.
+- Answers on the tape are only as trustworthy as the model and prompt that produced them. Quantarium checks their shape, not their sense.
+- Estimated cost uses the per-million prices typed into the grant; Quantarium does not know providers' prices.
 - Verified with a local model: qwen3:4b through Ollama answered a strategy's prompt within its schema, and the replay of the same backtest used the tape without a call.

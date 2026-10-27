@@ -2,11 +2,11 @@
 
 - **Status:** Accepted for Static and Feed Batch. Live Feed refuses the new return type until minute-bar fill rules are designed.
 - **Date:** 2026-10-21
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 
 ## Context
 
-A planner that suggests where to buy, trim, and protect a position needs three things Barloom lacked. It needs the user's holdings and what was paid for them. It needs orders that rest at a price rather than trading at the next open. And it needs a way to say "hold" without restating weights. The core promise must survive: the same input gives the same result, cells stay independent, and existing strategies and checkpoints behave exactly as before.
+A planner that suggests where to buy, trim, and protect a position needs three things Quantarium lacked. It needs the user's holdings and what was paid for them. It needs orders that rest at a price rather than trading at the next open. And it needs a way to say "hold" without restating weights. The core promise must survive: the same input gives the same result, cells stay independent, and existing strategies and checkpoints behave exactly as before.
 
 ## Decision
 

@@ -2,11 +2,11 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 
 ## Context
 
-Barloom's backend is reached through a CLI and a static HTML snapshot (`dashboard`). A v0.1.0 frontend needs:
+Quantarium's backend is reached through a CLI and a static HTML snapshot (`dashboard`). A v0.1.0 frontend needs:
 
 - one place to list every experiment, suite, and scenario;
 - live reads of analysis and timelines;
@@ -16,11 +16,11 @@ The core has no runtime dependencies, runs on the user's laptop, and executes tr
 
 ## Decision
 
-**A local web app served by `barloom serve`.** The frontend is static files packaged in `barloom/assets/app/` and served by a standard-library `ThreadingHTTPServer`. Installing Barloom is the only setup. Opening `http://127.0.0.1:8765/` starts the app.
+**A local web app served by `quantarium serve`.** The frontend is static files packaged in `quantarium/assets/app/` and served by a standard-library `ThreadingHTTPServer`. Installing Quantarium is the only setup. Opening `http://127.0.0.1:8765/` starts the app.
 
-**A versioned JSON API is the only contract.** The frontend never reads SQLite or files directly. Everything goes through `/api/v1/` ([reference](../api.md)). `barloom.api.Api` implements it independently of HTTP, so the CLI, tests, and future clients share one code path. Breaking changes require `/api/v2/`.
+**A versioned JSON API is the only contract.** The frontend never reads SQLite or files directly. Everything goes through `/api/v1/` ([reference](../api.md)). `quantarium.api.Api` implements it independently of HTTP, so the CLI, tests, and future clients share one code path. Breaking changes require `/api/v2/`.
 
-**A workspace layer.** `barloom.workspace.Workspace` scans a folder for databases, configs (recognized by shape), and scenarios. An optional `barloom-workspace.json` can name other subfolders. Items are addressed by workspace-relative paths, and any path that resolves outside the workspace is refused.
+**A workspace layer.** `quantarium.workspace.Workspace` scans a folder for databases, configs (recognized by shape), and scenarios. An optional `quantarium-workspace.json` can name other subfolders. Items are addressed by workspace-relative paths, and any path that resolves outside the workspace is refused.
 
 **Writes are jobs.** `POST /api/v1/jobs` queues an action:
 
@@ -40,7 +40,7 @@ Each action's parameters are validated at submit time. One worker thread runs jo
 - responses set `no-store`, `nosniff`, a restrictive Content Security Policy for HTML, and `frame-ancestors 'none'`;
 - errors return a message without a traceback. A failed job's own error, with a short trace, is visible to the local user through the job.
 
-**Frontend stack.** Constraints: it ships as static files, needs no Node runtime or build step, works offline, and keeps the CSP above. The app is ES modules under `barloom/assets/app/js/`, written with Preact components and `htm` templates. Sparklines are plain SVG, and uPlot draws the time-series charts. The user approved vendoring both libraries; they are pinned, unmodified, with licenses and hashes in `barloom/assets/app/vendor/README.md`. Static files are served with fixed content types, because on Windows `mimetypes` can map `.js` to `text/plain`, which browsers refuse for modules.
+**Frontend stack.** Constraints: it ships as static files, needs no Node runtime or build step, works offline, and keeps the CSP above. The app is ES modules under `quantarium/assets/app/js/`, written with Preact components and `htm` templates. Sparklines are plain SVG, and uPlot draws the time-series charts. The user approved vendoring both libraries; they are pinned, unmodified, with licenses and hashes in `quantarium/assets/app/vendor/README.md`. Static files are served with fixed content types, because on Windows `mimetypes` can map `.js` to `text/plain`, which browsers refuse for modules.
 
 ## Alternatives considered
 

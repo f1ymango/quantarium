@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 - **Extends:** [ADR-0002](0002-live-cell-failure-isolation.md), which isolated failures for Live Feed only
 
 ## Context

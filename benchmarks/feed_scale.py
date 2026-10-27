@@ -11,8 +11,8 @@ import tracemalloc
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from barloom.feed import run_feed_batch
-from barloom.model import Bar, CellSpec, FeedSpec, StrategySpec
+from quantarium.feed import run_feed_batch
+from quantarium.model import Bar, CellSpec, FeedSpec, StrategySpec
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -72,7 +72,7 @@ def main() -> None:
     now = datetime.combine(days[-1] + timedelta(days=3), datetime.min.time(), timezone.utc)
     runs = ROOT / "runs"
     runs.mkdir(exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="barloom-feed-scale-", dir=runs) as temp:
+    with tempfile.TemporaryDirectory(prefix="quantarium-feed-scale-", dir=runs) as temp:
         database = Path(temp) / "feed.sqlite"
         spec = FeedSpec("scale_probe", days[0], "alpaca", "iex", str(database),
                         0, 0, cells)

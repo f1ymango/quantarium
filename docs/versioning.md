@@ -31,11 +31,11 @@ Quantarium judges strategies, so a change in its numbers matters as much as a ch
 
 ## File formats
 
-File formats carry their own version in their names (`quantarium-data-v1`, `quantarium-decisions-v1`, ...). Within a major version, readers keep accepting every format version they ever wrote, and the older `barloom-*-v1` names stay readable throughout 1.x.
+File formats carry their own version in their names (`quantarium-data-v1`, `quantarium-decisions-v1`, ...). Within a major version, readers keep accepting every format version they ever wrote, and file-format names used before 1.0 stay readable throughout 1.x.
 
 ## Deprecation
 
-Something to be removed is announced in a MINOR release, with its replacement, and removed no earlier than the next MAJOR. The names Quantarium used as Barloom stay supported throughout 1.x.
+Something to be removed is announced in a MINOR release, with its replacement, and removed no earlier than the next MAJOR. The names used before 1.0 stay supported throughout 1.x.
 
 ## Security fixes
 

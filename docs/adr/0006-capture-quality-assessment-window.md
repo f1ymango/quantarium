@@ -2,7 +2,7 @@
 
 - **Status:** Accepted for capture diagnostics
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 
 ## Context
 

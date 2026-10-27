@@ -2,7 +2,7 @@
 
 - **Status:** Accepted for v0.4.6
 - **Date:** 2026-10-24
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 
 ## Context
 
@@ -19,7 +19,7 @@ A Complex cell combines several scripts (sleeves) with fixed shares of the money
 
 A regime supercell is an allocator that gives everything to one sleeve. A composite supercell is any other split.
 
-**Built-in allocators** (`barloom/allocators.py`):
+**Built-in allocators** (`quantarium/allocators.py`):
 
 - `FixedAllocation`: the configured shares, unchanged.
 - `TrendRegime`: everything to one sleeve while a symbol closes above its moving average, and to another otherwise. Until the window fills, the money goes to the risk-off sleeve.

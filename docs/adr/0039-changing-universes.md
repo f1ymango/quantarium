@@ -2,7 +2,7 @@
 
 - **Status:** Accepted for v0.9.1
 - **Date:** 2026-10-26
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 
 ## Context
 
@@ -33,6 +33,6 @@ Feed Batch and Live Feed still replay a fixed set of symbols and refuse index ce
 ## Consequences
 
 - A fixed universe replays event for event as before; `tests/test_universe.py` checks this on every example scenario and strategy, so the v0.8 cross-check against backtrader still covers it.
-- backtrader has no model of delisting payouts or index membership, so these rules are checked by Barloom's own tests on the invented example index, not by the cross-check.
+- backtrader has no model of delisting payouts or index membership, so these rules are checked by Quantarium's own tests on the invented example index, not by the cross-check.
 - A changing-universe run loads every symbol in its price file, to know the calendar; very large files use more memory than a run of a few of their symbols would.
 - The Lab's disguised replay does not yet copy delisting and membership files, so it skips imported scenarios with a reason.

@@ -2,11 +2,11 @@
 
 - **Status:** Accepted for the experimental single-session Live Feed
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 
 ## Context
 
-Barloom already runs multiple independent portfolio cells over one market tape. Live Feed must keep their accounts separate while consuming real-time data on a laptop. The user selected completed one-minute bars for initial strategy decisions. Alpaca's stock stream can publish updates to a minute bar after its first transmission. During development, credentials and an open market session are unavailable, so the same strategy path also needs a reproducible offline exercise.
+Quantarium already runs multiple independent portfolio cells over one market tape. Live Feed must keep their accounts separate while consuming real-time data on a laptop. The user selected completed one-minute bars for initial strategy decisions. Alpaca's stock stream can publish updates to a minute bar after its first transmission. During development, credentials and an open market session are unavailable, so the same strategy path also needs a reproducible offline exercise.
 
 ## Decision
 

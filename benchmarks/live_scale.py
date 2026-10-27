@@ -10,8 +10,8 @@ import tracemalloc
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from barloom.live import LiveFeed
-from barloom.model import CellSpec, LiveSpec, MinuteBar, StrategySpec
+from quantarium.live import LiveFeed
+from quantarium.model import CellSpec, LiveSpec, MinuteBar, StrategySpec
 from benchmarks.process_memory import process_memory_mib
 
 

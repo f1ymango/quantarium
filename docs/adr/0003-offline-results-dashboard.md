@@ -2,11 +2,11 @@
 
 - **Status:** Accepted for the first results interface
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 
 ## Context
 
-Barloom saves separate cell accounts and exposes JSON summaries, equity curves, and timelines through the CLI. Comparing several cells from raw terminal output is cumbersome. The first visual interface should remain usable without credentials, a running service, or an external JavaScript package, and should open on the same laptop that runs the simulator.
+Quantarium saves separate cell accounts and exposes JSON summaries, equity curves, and timelines through the CLI. Comparing several cells from raw terminal output is cumbersome. The first visual interface should remain usable without credentials, a running service, or an external JavaScript package, and should open on the same laptop that runs the simulator.
 
 ## Decision
 

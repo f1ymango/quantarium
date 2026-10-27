@@ -26,7 +26,7 @@ Most current attacks arrive through packages. So:
 - Never read, print, copy, log, or commit secrets. That includes API keys in the environment, the system keychain, `~/.ssh`, `~/.aws`, `~/.config/gh`, `~/.codex`, `~/.claude`, browser stores, and `.env` files.
 - Broker credentials live only in `APCA_API_KEY_ID` and `APCA_API_SECRET_KEY`. Model keys live only in environment variables or the keychain, never in configs, captures, logs, or responses.
 - Never use the maintainer's accounts to test: no real Claude Code turns, no GitHub tokens, no Alpaca requests, no paid model calls. Use fakes and local servers (Ollama) instead, unless the maintainer runs the test themselves.
-- Before every commit, scan the staged diff for key-shaped strings (`sk-`, `sk-ant-`, `ghp_`, `github_pat_`, `xai-`, `AIza`, `AKIA`, `-----BEGIN`, and Quantarium's own agent tokens, `qtm_` and `blm_`) and for personal data: holdings, watch lists, emails, account numbers. Stop if anything matches.
+- Before every commit, scan the staged diff for key-shaped strings (`sk-`, `sk-ant-`, `ghp_`, `github_pat_`, `xai-`, `AIza`, `AKIA`, `-----BEGIN`, and Quantarium's agent tokens, `qtm_` and the pre-1.0 `blm_`) and for personal data: holdings, watch lists, emails, account numbers. Stop if anything matches.
 - Personal holdings and preferences go in `/holdings.json` or `/private/`, which Git ignores.
 
 ## 4. Git and GitHub

@@ -2,11 +2,11 @@
 
 - **Status:** Accepted for local single-file entrypoints
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 
 ## Context
 
-Barloom pins the SHA-256 of each strategy entrypoint file in saved experiments. Python's ordinary `import_module` cache is keyed by module name, not by the config folder or file content. Running two experiments in one process with `choice:Pick` from different folders can reuse the first folder's class. Editing a script in the same process can likewise execute old code while the file hash reflects new bytes. That breaks the meaning of saved source provenance.
+Quantarium pins the SHA-256 of each strategy entrypoint file in saved experiments. Python's ordinary `import_module` cache is keyed by module name, not by the config folder or file content. Running two experiments in one process with `choice:Pick` from different folders can reuse the first folder's class. Editing a script in the same process can likewise execute old code while the file hash reflects new bytes. That breaks the meaning of saved source provenance.
 
 ## Decision
 

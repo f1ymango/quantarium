@@ -2,11 +2,11 @@
 
 - **Status:** Accepted and implemented
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; plan recorded for user review
+- **Deciders:** Quantarium maintainers; plan recorded for user review
 
 ## Context
 
-The user wants to judge one algorithm under different market conditions, such as a recession, a long rise, or a sudden crash, and compare the results side by side. Input must stay in formats Barloom defines, so customization cannot break the engine.
+The user wants to judge one algorithm under different market conditions, such as a recession, a long rise, or a sudden crash, and compare the results side by side. Input must stay in formats Quantarium defines, so customization cannot break the engine.
 
 What exists today:
 
@@ -22,7 +22,7 @@ Introduce two concepts on top of the existing Static input format.
 
 ### Scenario: a named, described input package
 
-A directory with a manifest and files in formats Barloom already validates:
+A directory with a manifest and files in formats Quantarium already validates:
 
 ```
 scenarios/covid_crash_2020/
@@ -39,7 +39,7 @@ scenarios/covid_crash_2020/
 | `synthetic` | A seeded generator; the same parameters and seed always produce the same file | A two-year rise, a sideways market, a regime switch, a crash |
 | `transformed` | A recorded transformation of another scenario, keeping the parent's hash | A real 2023 tape with a 35% five-day crash inserted, or doubled volatility |
 
-`tags` are free-form labels such as `recession`, `crash`, `bull`, or `high_volatility`, used to group results. Barloom does not infer them.
+`tags` are free-form labels such as `recession`, `crash`, `bull`, or `high_volatility`, used to group results. Quantarium does not infer them.
 
 Generators and transforms work on the daily tape only and produce valid OHLCV bars (`low ≤ open, close ≤ high`, positive prices, integer volume), so the existing loader and engine are unchanged. The first generators are deliberately simple and documented:
 
@@ -59,9 +59,9 @@ suite.json
 
 `symbol_map` renames a scenario's symbols to the cells' symbols, for example synthetic `S1` to `AAPL`, so one cell definition runs on any scenario. Every scenario must provide every symbol the cells use after mapping, or the suite refuses to start.
 
-`barloom suite run` executes one Static run per scenario into a single database. Each run is tagged with the scenario's name, kind, tags, and manifest hash. Cell failure isolation from ADR-0009 applies per run.
+`quantarium suite run` executes one Static run per scenario into a single database. Each run is tagged with the scenario's name, kind, tags, and manifest hash. Cell failure isolation from ADR-0009 applies per run.
 
-`barloom suite report` builds a cells-by-scenarios matrix of total return, maximum drawdown, volatility, turnover, and excess return against a chosen benchmark cell, plus averages per tag. It also exports the matrix as CSV. This adds the cross-run comparison and the missing risk metrics from the gap list.
+`quantarium suite report` builds a cells-by-scenarios matrix of total return, maximum drawdown, volatility, turnover, and excess return against a chosen benchmark cell, plus averages per tag. It also exports the matrix as CSV. This adds the cross-run comparison and the missing risk metrics from the gap list.
 
 Every suite report shows each scenario's `kind`. Results from `synthetic` and `transformed` scenarios are labeled as such. `historical` scenarios carry the survivorship-bias warning when their symbols were chosen from today's lists.
 

@@ -2,7 +2,7 @@
 
 - **Status:** Accepted for v0.4.2
 - **Date:** 2026-10-22
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 - **Review:** ChatGPT-6 Sol
 
 ## Context
@@ -14,7 +14,7 @@ The Lab previously recorded a cell's `information_end` date as a user declaratio
 - Train an initial daily drop-risk baseline from Static-format CSV in a separate child process. The label observes the lowest low over a fixed number of completed sessions after the next open. A row is admitted only if its *label end* is no later than `--through`. Features use completed bars through the decision close and require uninterrupted market sessions.
 - Store the resulting feature recipe, label recipe, numeric weights, training algorithm, input SHA-256, source declaration, and final admitted label date in a JSON card. Its filename contains a digest of its exact bytes. The simulation uses standard-library inference and refuses a changed card. The optional `[ml]` extra provides NumPy and scikit-learn training; a deterministic standard-library trainer covers small local studies.
 - Attach a card to a cell independently of its Simple or Complex mode. The engine computes estimates at a daily close, passes them as read-only `context.risk_estimates`, and records them in the journal. A card does not generate orders. Scripts that act on risk remain subject to a separately registered Lab comparison.
-- Bind the cell's `information_end` to the card's last training label. Lab registration pins the card SHA-256. A whole-run Lab verdict is `unknown` if any scenario starts on or before that boundary; Barloom does not claim that a partial post-boundary segment passes a whole-run rule.
+- Bind the cell's `information_end` to the card's last training label. Lab registration pins the card SHA-256. A whole-run Lab verdict is `unknown` if any scenario starts on or before that boundary; Quantarium does not claim that a partial post-boundary segment passes a whole-run rule.
 - Keep the data manifest's provider/source status `user_declared`. A hash verifies the input bytes the trainer saw, not their origin or point-in-time completeness. Lab caveats explicitly retain that limitation.
 
 ## Alternatives considered

@@ -1,10 +1,10 @@
-# Frontend v0.1.0 design before the Quantarium rename (historical)
+# Frontend v0.1.0 design (historical)
 
-- **Status:** Historical design record for Barloom v0.1.0; current behavior has since changed.
+- **Status:** Historical design record for v0.1.0; current behavior has since changed.
 - **Date:** 2026-10-20
 - **Builds on:** [ADR-0011](adr/0011-local-api-and-frontend-architecture.md) (local web app over the v1 API) and [docs/api.md](api.md)
 
-> This document records the initial design under the project's former name, Barloom. Quantarium has no v0.1.0 release. For current behavior, use the README, the Learn handbook in the app, and the latest release plan.
+> This document records the initial design of v0.1.0, a private release. For current behavior, use the README, the Learn handbook in the app, and the latest release plan.
 
 ## 1. Concept
 

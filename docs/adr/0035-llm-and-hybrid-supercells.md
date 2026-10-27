@@ -2,7 +2,7 @@
 
 - **Status:** Accepted for v0.4.5
 - **Date:** 2026-10-24
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 
 ## Context
 
@@ -40,7 +40,7 @@ The verdict is `unknown` unless every scenario is clean. A candidate with a gran
 
 Each part's contribution is the candidate's return minus its variant's. When a part's mean contribution is not positive, a caveat says so. Ablation is diagnostic and does not change the verdict. It is a Lab device: Feed and Live refuse cells with `ablation`.
 
-**The disguised replay, optional per experiment** (`disguised_replay`). For each scenario that is not synthetic, Barloom writes a disguised copy under `.barloom/lab-disguised/`:
+**The disguised replay, optional per experiment** (`disguised_replay`). For each scenario that is not synthetic, Quantarium writes a disguised copy under `.quantarium/lab-disguised/`:
 
 - invented four-letter symbols;
 - the same number of NYSE sessions starting in 2041;

@@ -2,28 +2,28 @@
 
 - **Status:** Accepted. It covers the read-only tools (Part 7 of the [v0.3.0 plan](../plans/v0.3.0-agent-interface.md)) and the draft and simulate tools, the schema file, and server-side waiting (Part 8).
 - **Date:** 2026-10-21
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 
 ## Context
 
-External agents, starting with Claude Code, Claude Desktop, and the Codex CLI, need a standard way to use Barloom. All three speak the Model Context Protocol (MCP) and can start a local MCP server as a subprocess over stdio. Barloom's limits (ADR-0014) live in `barloom serve`: the switch, tokens and tiers, budgets, the audit log, and the loader check for agent-written scripts. A second process writing the same workspace would bypass the single job worker and could race on SQLite.
+External agents, starting with Claude Code, Claude Desktop, and the Codex CLI, need a standard way to use Quantarium. All three speak the Model Context Protocol (MCP) and can start a local MCP server as a subprocess over stdio. Quantarium's limits (ADR-0014) live in `quantarium serve`: the switch, tokens and tiers, budgets, the audit log, and the loader check for agent-written scripts. A second process writing the same workspace would bypass the single job worker and could race on SQLite.
 
 ## Decision
 
-**`barloom mcp` is a thin MCP server that forwards to `barloom serve`.**
+**`quantarium mcp` is a thin MCP server that forwards to `quantarium serve`.**
 
 - It speaks JSON-RPC 2.0 over stdio, one message per line. It answers `initialize`, `ping`, `tools/list`, and `tools/call`, and ignores notifications.
 - It is written with the standard library, so the core stays free of dependencies.
-- Each tool becomes one HTTP request with `Authorization: Bearer $BARLOOM_TOKEN`. Every decision is made by the server.
+- Each tool becomes one HTTP request with `Authorization: Bearer $QUANTARIUM_TOKEN`. Every decision is made by the server.
 - Tool errors come back as results with `isError: true` and the server's `code` and `hint`, so the model can recover.
 
 **Discovery.**
 
-- `barloom serve` writes `.barloom/server.json` (URL and process id) and removes it on exit.
-- `barloom mcp` uses a live, healthy server if one exists. Otherwise it starts one in the background, on a free port, and waits for its announcement.
+- `quantarium serve` writes `.quantarium/server.json` (URL and process id) and removes it on exit.
+- `quantarium mcp` uses a live, healthy server if one exists. Otherwise it starts one in the background, on a free port, and waits for its announcement.
 - Liveness uses `OpenProcess`/`GetExitCodeProcess` on Windows, never `os.kill(pid, 0)` (see c7f6a17).
 
-**Off means off.** With agent features off, `barloom mcp` exits with status 2 and a message on stderr. It neither starts a server nor writes to stdout.
+**Off means off.** With agent features off, `quantarium mcp` exits with status 2 and a message on stderr. It neither starts a server nor writes to stdout.
 
 **Tools are described for models.** Each description starts with its tier ("Observe.") and says what it returns. Input schemas forbid unknown arguments, and missing or unknown arguments are refused before any request is sent.
 
@@ -54,13 +54,13 @@ Job tools accept an `idempotency_key`. `wait_for_job` is a single `GET jobs/{id}
 
 | Choice | Benefit | Cost or reason not chosen |
 | --- | --- | --- |
-| Open the workspace in-process in `barloom mcp` | No server needed | A second writer; jobs invisible to the app; the limits would need a second enforcement path |
+| Open the workspace in-process in `quantarium mcp` | No server needed | A second writer; jobs invisible to the app; the limits would need a second enforcement path |
 | Depend on an MCP SDK | Protocol details handled for us | A dependency for a small protocol surface; the core is standard-library only |
 | Streamable HTTP MCP first | No subprocess | Not every client supports it yet; stdio works in all three target clients |
-| Read the token from `.barloom/agents.json` | No copy step | Tokens are stored only as digests (ADR-0014) |
+| Read the token from `.quantarium/agents.json` | No copy step | Tokens are stored only as digests (ADR-0014) |
 
 ## Consequences
 
 - The token sits in the MCP client's configuration, in plain text in that client's settings file. The README says so, and revoking a connection on the Agents page ends its access at once.
-- A server started by `barloom mcp` keeps running after the client exits. Stopping it means ending the process, and it removes its announcement when stopped normally.
+- A server started by `quantarium mcp` keeps running after the client exits. Stopping it means ending the process, and it removes its announcement when stopped normally.
 - Adding a tool means adding one entry to `TOOLS` and making sure the server's `OPERATIONS` table allows the request at the right tier.

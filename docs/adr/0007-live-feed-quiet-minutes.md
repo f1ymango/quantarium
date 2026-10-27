@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 - **Amends:** [ADR-0001](0001-live-feed-timing-and-replay.md), which halted on any missing symbol-minute
 
 ## Context

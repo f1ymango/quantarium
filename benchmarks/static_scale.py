@@ -10,10 +10,10 @@ import tracemalloc
 from datetime import date, timedelta
 from pathlib import Path
 
-from barloom.engine import run_static
+from quantarium.engine import run_static
 from benchmarks.process_memory import process_memory_mib
-from barloom.journal import read_report
-from barloom.model import CellSpec, RunSpec, StrategySpec
+from quantarium.journal import read_report
+from quantarium.model import CellSpec, RunSpec, StrategySpec
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,7 +44,7 @@ def main() -> None:
     days = _sessions(args.sessions)
     runs = ROOT / "runs"
     runs.mkdir(exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="barloom-scale-", dir=runs) as temp:
+    with tempfile.TemporaryDirectory(prefix="quantarium-scale-", dir=runs) as temp:
         folder = Path(temp)
         tape = folder / "prices.csv"
         start = time.perf_counter()

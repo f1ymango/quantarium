@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "quantarium"
-version = "1.0.7"
+version = "1.0.8"
 description = "Test a trading idea honestly before you believe it: a local strategy lab with evidence rules and a safe harness for AI agents"
 readme = "README.md"
 license = "PolyForm-Noncommercial-1.0.0"
@@ -46,7 +46,7 @@ ml = ["numpy>=1.26,<3", "scikit-learn>=1.4,<2"]
 quantarium = "quantarium.__main__:main"
 
 [tool.setuptools.packages.find]
-# barloom is the old name, kept so imports written before 1.0 keep working.
+# The package's pre-1.0 name, kept as an alias so imports written before 1.0 keep working.
 include = ["quantarium*", "barloom"]
 
 [tool.setuptools.package-data]

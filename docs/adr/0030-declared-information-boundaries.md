@@ -2,12 +2,12 @@
 
 - **Status:** Accepted as v0.4.0 groundwork; verification belongs to the Lab and model-card milestones.
 - **Date:** 2026-10-22
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 - **Review:** ChatGPT-6 Sol
 
 ## Context
 
-An ML model's last training feature date is not necessarily the last date whose outcome it learned. A label can depend on later prices. Historical sessions on or before that final label date cannot establish out-of-sample performance for the model. Barloom needs to carry that boundary through daily runs before model cards exist.
+An ML model's last training feature date is not necessarily the last date whose outcome it learned. A label can depend on later prices. Historical sessions on or before that final label date cannot establish out-of-sample performance for the model. Quantarium needs to carry that boundary through daily runs before model cards exist.
 
 ## Decision
 

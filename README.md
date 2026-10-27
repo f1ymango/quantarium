@@ -4,7 +4,7 @@
 
 **Test a trading idea honestly, on your own or with AI agents, before you believe it.**
 
-**Version: 1.0.7.** See the [changelog](CHANGELOG.md) for its contents and known limits. Licensed for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md).
+**Version: 1.0.8.** See the [changelog](CHANGELOG.md) for its contents and known limits. Licensed for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md).
 
 Quantarium is a local lab for testing stock-portfolio strategies. It simulates trading and never places real orders. It runs on your computer, listens only on a loopback address, and its core uses only Python's standard library.
 
@@ -692,10 +692,6 @@ python -m benchmarks.live_scale --symbols 100 --minutes 30 --cells 8 --history-l
 ```
 
 This probe generates synthetic bars one minute at a time, runs every cell, writes events to a temporary SQLite database, and reports runtime, database size, peak traced Python allocations, current and peak process resident memory, and private committed bytes where available. It does not open a WebSocket or include network latency. The resident-memory figure includes the interpreter and native SQLite working set; `tracemalloc` alone does not. In a Windows probe with 500 symbols and 60 minutes, moving from one to sixteen equal-weight cells changed peak resident memory from 49.52 to 56.87 MiB, runtime from 4.72 to 20.99 seconds, and SQLite size from 10.49 to 37.72 MiB. These are machine-specific synthetic results, and real Alpaca subscription limits may prevent the same symbol count on an account. The [Python-versus-C++ decision record](docs/adr/0004-python-for-minute-bar-live-feed.md) explains what this measurement supports and what remains to be tested.
-
-## Upgrading from Barloom
-
-Quantarium was called **Barloom** before 1.0. Everything Barloom wrote still works: an old workspace's `.barloom` folder becomes `.quantarium` the first time Quantarium opens it, and `barloom-workspace.json`, `BARLOOM_*` variables, `blm_` agent tokens, keys saved in the keychain, `barloom-*-v1` files, and scripts that import `barloom` are all read. `python -m barloom` still runs the command line.
 
 ## License
 

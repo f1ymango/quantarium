@@ -15,7 +15,7 @@ _SPEC = importlib.util.spec_from_file_location("quantarium_crosscheck", ROOT / "
 crosscheck = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(crosscheck)
 
-REFERENCE = env("REFERENCE_PYTHON")  # QUANTARIUM_REFERENCE_PYTHON, or the older BARLOOM_ name
+REFERENCE = env("REFERENCE_PYTHON")  # QUANTARIUM_REFERENCE_PYTHON, or its pre-1.0 equivalent
 
 
 def result(equity, fills) -> dict:

@@ -2,7 +2,7 @@
 
 - **Status:** Accepted (Parts 11 and 12 of the [v0.3.0 plan](../plans/v0.3.0-agent-interface.md))
 - **Date:** 2026-10-21
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 
 ## Context
 
@@ -53,6 +53,6 @@ At approval the pins are recomputed. Any difference marks the proposal `stale` a
 
 ## Consequences
 
-- Proposals live in `.barloom/proposals.json`, which is out of agent reach (ADR-0014 path rules).
+- Proposals live in `.quantarium/proposals.json`, which is out of agent reach (ADR-0014 path rules).
 - A proposal that names a file outside cells, such as `feed-batch` on a config, pins no scripts. Its config's own hashes (Feed's settings check) still guard it.
 - The Inbox page (Part 12) is where approval happens. The assistant's chat (Part 14) links to proposals but has no approve button.

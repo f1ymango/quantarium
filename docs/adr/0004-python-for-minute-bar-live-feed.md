@@ -2,11 +2,11 @@
 
 - **Status:** Accepted pending measurement with a real market session
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 
 ## Context
 
-Live Feed may run many independent cells at once, and the user raised a concern that Python memory overhead could grow enough to justify moving to C++ early. Barloom currently shares one bounded minute history per symbol, processes cells serially in one process, and writes their account events to SQLite. `tracemalloc` measures Python allocations but excludes native SQLite and interpreter working-set costs, so it alone is insufficient for this choice.
+Live Feed may run many independent cells at once, and the user raised a concern that Python memory overhead could grow enough to justify moving to C++ early. Quantarium currently shares one bounded minute history per symbol, processes cells serially in one process, and writes their account events to SQLite. `tracemalloc` measures Python allocations but excludes native SQLite and interpreter working-set costs, so it alone is insufficient for this choice.
 
 ## Decision
 

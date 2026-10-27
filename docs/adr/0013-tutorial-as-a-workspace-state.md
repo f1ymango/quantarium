@@ -2,10 +2,10 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-21
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 - **Amends:** [ADR-0012](0012-first-run-tutorial-in-the-real-workspace.md)
 
-The `.barloom` paths below record the original decision. Since v1.0.1, new workspaces use `.quantarium`; the old paths remain readable for compatibility.
+The hidden folder has been called `.quantarium` since v1.0.1; workspaces from before then remain readable.
 
 ## Context
 
@@ -13,7 +13,7 @@ ADR-0012 ran the tutorial directly in the user's workspace. That works on a firs
 
 1. **Feed name reuse.** Name checks looked only at generated Feed configs. When a config had been deleted but its database `runs/feed-first-forward.sqlite` kept, a replay reused `first_forward` and the deploy failed: "Feed configuration changed outside its cells".
 2. **Edited starter script.** If the user had edited `strategies/starter.py` and removed TrendFollower, the tutorial cell could not become ready and the tour stalled.
-3. **Custom scan folders.** A `barloom-workspace.json` that scans other scenario folders hid the generated `scenarios/first_market`, and the tour stalled.
+3. **Custom scan folders.** A `quantarium-workspace.json` that scans other scenario folders hid the generated `scenarios/first_market`, and the tour stalled.
 4. **Leftovers on skip.** Skipping partway left the unnamed cell and the scenario behind.
 
 The user's own cells and records also crowded the tutorial's pages. The user asked that the tutorial begin from "the same old state of nothing", create one new cell, and be treated as a state.
@@ -22,8 +22,8 @@ The user's own cells and records also crowded the tutorial's pages. The user ask
 
 **While the tutorial is active, the API serves a private workspace.**
 
-- `onboarding-start` creates `.barloom/tutorial/`, an empty workspace with default scan folders and its own copy of the starter strategies.
-- While `.barloom/onboarding.json` says `active`, every read, command, and job except the `onboarding` ones goes to an `Api` for that folder. It is created lazily, so a server restart resumes the run.
+- `onboarding-start` creates `.quantarium/tutorial/`, an empty workspace with default scan folders and its own copy of the starter strategies.
+- While `.quantarium/onboarding.json` says `active`, every read, command, and job except the `onboarding` ones goes to an `Api` for that folder. It is created lazily, so a server restart resumes the run.
 - The frontend needs no filtering. Pages remount when the state changes, and a **Tutorial** badge marks the state.
 
 **Finishing promotes; skipping discards.**
@@ -58,4 +58,4 @@ The suite and static results go to the results database; the tutorial Lab databa
 
 ## Consequences
 
-The real workspace is written only when a tutorial finishes, and then only with new files. Jobs the tutorial ran appear in Activity only while it runs. Static and Feed results stay in Log after promotion; Lab practice is discarded so it cannot be mistaken for lasting evidence in the user's workspace. A completed replay adds a second cell (`My first cell 2`) with its own market and experiment. A promoted scenario lives at `scenarios/<name>`, so a workspace whose `barloom-workspace.json` scans only other scenario folders won't list it, although the cell's results still refer to it. The tutorial folder lies under `.barloom/`, which workspace scans skip.
+The real workspace is written only when a tutorial finishes, and then only with new files. Jobs the tutorial ran appear in Activity only while it runs. Static and Feed results stay in Log after promotion; Lab practice is discarded so it cannot be mistaken for lasting evidence in the user's workspace. A completed replay adds a second cell (`My first cell 2`) with its own market and experiment. A promoted scenario lives at `scenarios/<name>`, so a workspace whose `quantarium-workspace.json` scans only other scenario folders won't list it, although the cell's results still refer to it. The tutorial folder lies under `.quantarium/`, which workspace scans skip.

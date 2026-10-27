@@ -2,14 +2,14 @@
 
 - **Status:** Accepted; amended by [ADR-0013](0013-tutorial-as-a-workspace-state.md)
 - **Date:** 2026-10-21
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
-- **Replaces:** the v0.2.0 disposable practice workspace (`barloom/tutorial.py`)
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
+- **Replaces:** the v0.2.0 disposable practice workspace (`quantarium/tutorial.py`)
 
 ## Context
 
-v0.2.0 ran its guided tour in a disposable practice workspace under `.barloom/tutorial-sessions/<id>/`. The workspace was pre-filled with prepared cells and results; the user inspected them, and finishing deleted everything. The user wanted something different:
+v0.2.0 ran its guided tour in a disposable practice workspace under `.quantarium/tutorial-sessions/<id>/`. The workspace was pre-filled with prepared cells and results; the user inspected them, and finishing deleted everything. The user wanted something different:
 
-- The tutorial starts on the first launch, with nothing in Barloom yet.
+- The tutorial starts on the first launch, with nothing in Quantarium yet.
 - The user does the work: creates a scenario, deploys a cell in Static, exports it to Feed, advances it with Feed Batch (Live Feed is introduced, not run), and reviews Log and Activity.
 - The tutorial ends on Home with one tutorial cell, which every user who doesn't skip it keeps.
 - It should feel immersive, like a game.
@@ -27,7 +27,7 @@ The practice-session code also contained a Windows bug (fixed separately): its l
 
 Replays pick numbered names that don't collide with earlier runs (`first_market_2`, …).
 
-**First launch is detected per workspace.** `.barloom/onboarding.json` holds `status` (`pending` until started, then `active`, `completed`, or `skipped`), the current step, the tutorial cell's id, and the names for this run. While the status is `pending`, the app shows the tutorial's title screen. Progress is saved on every step, so a reload or another browser resumes there. Commands `onboarding-start`, `onboarding-step`, and `onboarding-finish` manage it.
+**First launch is detected per workspace.** `.quantarium/onboarding.json` holds `status` (`pending` until started, then `active`, `completed`, or `skipped`), the current step, the tutorial cell's id, and the names for this run. While the status is `pending`, the app shows the tutorial's title screen. Progress is saved on every step, so a reload or another browser resumes there. Commands `onboarding-start`, `onboarding-step`, and `onboarding-finish` manage it.
 
 **A new workspace starts empty.** Default scan folders no longer include the repository's `examples/` (configs, scenarios, data). Starter strategies ship in the package and are copied to `strategies/starter.py`, never over an existing file, when the tutorial starts or is skipped. Scripts already used by library cells stay in the script picker even outside the scanned folders, so existing cells don't lose theirs.
 
@@ -58,4 +58,4 @@ The handbook and the **?** buttons are kept and rewritten for the new flow. Live
 
 ## Consequences
 
-Tutorial content is ordinary workspace content: it appears in Log and Activity, can be archived, and is not deleted on finish. Replays add more content with numbered names. The v0.2.0 practice endpoints (`/api/v1/tutorial-sessions`, `/api/v1/tutorial/{id}/…`) and the `/tutorial/{id}/` page are removed. Workspaces that relied on `examples/` appearing in the app need a `barloom-workspace.json`. Tutorial steps depend on stable `data-tour` attributes in the pages; changing a page's controls means checking the tour still finds them.
+Tutorial content is ordinary workspace content: it appears in Log and Activity, can be archived, and is not deleted on finish. Replays add more content with numbered names. The v0.2.0 practice endpoints (`/api/v1/tutorial-sessions`, `/api/v1/tutorial/{id}/…`) and the `/tutorial/{id}/` page are removed. Workspaces that relied on `examples/` appearing in the app need a `quantarium-workspace.json`. Tutorial steps depend on stable `data-tour` attributes in the pages; changing a page's controls means checking the tour still finds them.

@@ -2,27 +2,27 @@
 
 - **Status:** Accepted (Parts 6, 9, and 10 of the [v0.3.0 plan](../plans/v0.3.0-agent-interface.md))
 - **Date:** 2026-10-21
-- **Deciders:** Barloom maintainers
+- **Deciders:** Quantarium maintainers
 
 ## Context
 
-Barloom runs strategy scripts as Python in its own process, with the user's privileges. That is fine for code the user wrote or chose. An agent, though, can be mistaken or manipulated by text it reads, and could write a strategy that reads files, opens connections, or deletes data the moment a simulation runs. Agents need to try their own ideas, so their code has to run somewhere. The user also required that every limit be enforced by code, not by the sandbox alone, because models can be jailbroken.
+Quantarium runs strategy scripts as Python in its own process, with the user's privileges. That is fine for code the user wrote or chose. An agent, though, can be mistaken or manipulated by text it reads, and could write a strategy that reads files, opens connections, or deletes data the moment a simulation runs. Agents need to try their own ideas, so their code has to run somewhere. The user also required that every limit be enforced by code, not by the sandbox alone, because models can be jailbroken.
 
 ## Decision
 
 **Provenance by content hash (Part 6).**
 
-- Every script version an agent writes is recorded in `.barloom/script-provenance.json` as `agent-unreviewed`, together with the connection that wrote it.
+- Every script version an agent writes is recorded in `.quantarium/script-provenance.json` as `agent-unreviewed`, together with the connection that wrote it.
 - The record is written before the file is saved, so the file is never on disk unmarked.
 - A user's own edit changes the hash, so the edited file is the user's code.
 
 **One check at the loader.** `engine._load_strategy` looks up every file's hash before running it, so the rule holds however a run was started, and even if a new code path forgets the sandbox:
 
-- An unreviewed agent version never runs in Barloom's process.
+- An unreviewed agent version never runs in Quantarium's process.
 - Static simulations (`CellRuntime(..., sandbox_unreviewed=True)`, used by Static runs and suites) get a `SandboxedStrategy` instead.
 - Feed and Live never pass that flag, so loading such a script there is refused with `script_unreviewed`.
 
-**The sandbox (Part 10)** runs the strategy in a child process (`barloom/sandbox_child.py`). The engine sees an ordinary strategy: `on_bar`, plus `snapshot`/`restore` when the strategy has them. Each call becomes one JSON message, and only bars the child hasn't seen are sent. The layers are independent:
+**The sandbox (Part 10)** runs the strategy in a child process (`quantarium/sandbox_child.py`). The engine sees an ordinary strategy: `on_bar`, plus `snapshot`/`restore` when the strategy has them. Each call becomes one JSON message, and only bars the child hasn't seen are sent. The layers are independent:
 
 1. **Code policy**, checked before any process starts:
    - imports only from math, statistics, collections, itertools, functools, dataclasses, typing, datetime, random, bisect, heapq, operator, fractions, decimal, and numpy when installed;
@@ -50,7 +50,7 @@ These layers stop the realistic failures: a mistaken agent, or one following inj
 
 | Choice | Benefit | Cost or reason not chosen |
 | --- | --- | --- |
-| Run the whole simulation job in the child | One process; no per-call messages | The child would hold Barloom's own file and database access while the untrusted code runs |
+| Run the whole simulation job in the child | One process; no per-call messages | The child would hold Quantarium's own file and database access while the untrusted code runs |
 | Refuse unreviewed code everywhere | Simplest | Agents could not test their own ideas, the main point of drafting code |
 | AST policy only | No processes | One layer; anything the static check misses runs with full privileges |
 | Docker or WASM now | Stronger isolation | A heavy dependency for a local, standard-library tool; can come later behind the same interface |

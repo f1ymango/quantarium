@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-20
-- **Deciders:** Barloom maintainers; implementation choice recorded for user review
+- **Deciders:** Quantarium maintainers; implementation choice recorded for user review
 
 ## Context
 
@@ -30,4 +30,4 @@ Live Feed does not model corporate actions and is unaffected.
 
 ## Consequences
 
-Strategy outputs around a split change compared with earlier versions of Barloom, which is the intent. Static and Feed Batch use the same runtime, so the Static-versus-Feed replay audit remains comparable. A strategy that needs raw historical prices has no direct accessor yet.
+Strategy outputs around a split change compared with earlier versions of Quantarium, which is the intent. Static and Feed Batch use the same runtime, so the Static-versus-Feed replay audit remains comparable. A strategy that needs raw historical prices has no direct accessor yet.

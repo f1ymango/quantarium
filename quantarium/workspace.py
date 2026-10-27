@@ -23,7 +23,7 @@ from .scripts import strategy_classes
 
 WORKSPACE_FILE = WORKSPACE_FILES[0]
 # Where `quantarium serve --fresh` makes new, empty workspaces, unless told otherwise
-# (QUANTARIUM_FRESH_ROOT, or Barloom's BARLOOM_FRESH_ROOT).
+# (QUANTARIUM_FRESH_ROOT, or its pre-1.0 equivalent).
 FRESH_ROOT_ENV = "QUANTARIUM_FRESH_ROOT"
 # Repository examples are for the command line; a new workspace starts empty
 # so the first-run tutorial builds everything the user sees.
@@ -55,7 +55,7 @@ class Workspace:
 
     def resolve(self, relative: str) -> Path:
         """Map an API identifier to a path, refusing anything outside the root."""
-        # Settings saved before 1.0 may name the hidden folder by its Barloom name.
+        # Settings saved before 1.0 may name the hidden folder by its pre-1.0 name.
         path = (self.root / current_relative(relative)).resolve()
         if path != self.root and self.root not in path.parents:
             raise PermissionError(f"Path is outside the workspace: {relative}")
