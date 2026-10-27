@@ -1,0 +1,29 @@
+{
+  "feed_id": "daily_demo",
+  "provider": "alpaca",
+  "market_feed": "iex",
+  "start_date": "2026-10-16",
+  "database_path": "../runs/feed_demo.sqlite",
+  "slippage_bps": 5,
+  "commission_per_order": 0,
+  "cells": [
+    {
+      "name": "single_stock",
+      "mode": "simple",
+      "symbols": ["AAPL"],
+      "initial_cash": 10000,
+      "strategies": [
+        {"entrypoint": "strategies:BuyAndHold"}
+      ]
+    },
+    {
+      "name": "equal_weight",
+      "mode": "complex",
+      "symbols": ["AAPL", "MSFT"],
+      "initial_cash": 10000,
+      "strategies": [
+        {"entrypoint": "strategies:EqualWeight"}
+      ]
+    }
+  ]
+}

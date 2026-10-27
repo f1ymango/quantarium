@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+build/
+*.egg-info/
+.env
+.env.*
+runs/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+cells/
+configs/generated/
+/scenarios/
+/data/
+/models/
+.quantarium/
+.barloom/
+
+# Personal holdings and preferences stay local.
+/holdings.json
+/private/

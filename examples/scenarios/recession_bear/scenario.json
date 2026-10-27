@@ -1,0 +1,63 @@
+{
+  "description": "A flat quarter, a prolonged slide, then a weak recovery. Uses S1 and S2, mapped to cell symbols by the suite.",
+  "end_date": "2030-12-24",
+  "files": {
+    "prices.csv": "75470420707e4572c2c493ed33c62f808059f797314e05533b775ff31f04d57a"
+  },
+  "format": "quantarium-scenario-v1",
+  "kind": "synthetic",
+  "name": "recession_bear",
+  "provenance": {
+    "generator": "correlated_random_walk_v1",
+    "method": "generate",
+    "spec": {
+      "description": "A flat quarter, a prolonged slide, then a weak recovery. Uses S1 and S2, mapped to cell symbols by the suite.",
+      "name": "recession_bear",
+      "seed": 23,
+      "segments": [
+        {
+          "annual_drift": 0.0,
+          "annual_volatility": 0.2,
+          "sessions": 60
+        },
+        {
+          "annual_drift": -0.35,
+          "annual_volatility": 0.35,
+          "sessions": 150
+        },
+        {
+          "annual_drift": 0.05,
+          "annual_volatility": 0.3,
+          "sessions": 42
+        }
+      ],
+      "start_date": "2030-01-07",
+      "symbols": {
+        "S1": {
+          "beta": 1.1,
+          "idiosyncratic_volatility": 0.15,
+          "price": 50
+        },
+        "S2": {
+          "beta": 0.9,
+          "idiosyncratic_volatility": 0.2,
+          "price": 80
+        }
+      },
+      "tags": [
+        "bear",
+        "recession"
+      ]
+    }
+  },
+  "sessions": 252,
+  "start_date": "2030-01-07",
+  "symbols": [
+    "S1",
+    "S2"
+  ],
+  "tags": [
+    "bear",
+    "recession"
+  ]
+}

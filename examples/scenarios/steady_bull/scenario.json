@@ -1,0 +1,51 @@
+{
+  "description": "A year of steady gains with moderate volatility.",
+  "end_date": "2030-12-24",
+  "files": {
+    "prices.csv": "995d34e1f714c60697246f16be7b8a1aec1973d6a9056634b904e98207893109"
+  },
+  "format": "quantarium-scenario-v1",
+  "kind": "synthetic",
+  "name": "steady_bull",
+  "provenance": {
+    "generator": "correlated_random_walk_v1",
+    "method": "generate",
+    "spec": {
+      "description": "A year of steady gains with moderate volatility.",
+      "name": "steady_bull",
+      "seed": 11,
+      "segments": [
+        {
+          "annual_drift": 0.15,
+          "annual_volatility": 0.15,
+          "sessions": 252
+        }
+      ],
+      "start_date": "2030-01-07",
+      "symbols": {
+        "AAA": {
+          "beta": 1.0,
+          "idiosyncratic_volatility": 0.15,
+          "price": 50
+        },
+        "BBB": {
+          "beta": 0.8,
+          "idiosyncratic_volatility": 0.2,
+          "price": 80
+        }
+      },
+      "tags": [
+        "bull"
+      ]
+    }
+  },
+  "sessions": 252,
+  "start_date": "2030-01-07",
+  "symbols": [
+    "AAA",
+    "BBB"
+  ],
+  "tags": [
+    "bull"
+  ]
+}

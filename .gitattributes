@@ -1,0 +1,2 @@
+examples/scenarios/** text eol=lf
+barloom/assets/app/vendor/** -text

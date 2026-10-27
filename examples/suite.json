@@ -1,0 +1,39 @@
+{
+  "name": "example_suite",
+  "database_path": "../runs/suite_example.sqlite",
+  "slippage_bps": 5,
+  "commission_per_order": 1,
+  "benchmark": "buy_hold",
+  "scenarios": [
+    "scenarios/steady_bull",
+    "scenarios/bull_with_crash",
+    {"path": "scenarios/recession_bear", "symbol_map": {"S1": "AAA", "S2": "BBB"}},
+    "scenarios/sideways_chop"
+  ],
+  "cells": [
+    {
+      "name": "buy_hold",
+      "mode": "simple",
+      "symbols": ["AAA"],
+      "initial_cash": 10000,
+      "strategies": [{"entrypoint": "strategies:BuyAndHold"}]
+    },
+    {
+      "name": "trend",
+      "mode": "simple",
+      "symbols": ["AAA"],
+      "initial_cash": 10000,
+      "strategies": [{"entrypoint": "strategies:TrendFollower", "parameters": {"window": 20}}]
+    },
+    {
+      "name": "two_sleeves",
+      "mode": "complex",
+      "symbols": ["AAA", "BBB"],
+      "initial_cash": 10000,
+      "strategies": [
+        {"entrypoint": "strategies:EqualWeight", "allocation": 0.6},
+        {"entrypoint": "strategies:RecentLeader", "allocation": 0.4}
+      ]
+    }
+  ]
+}

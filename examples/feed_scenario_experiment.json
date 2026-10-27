@@ -1,0 +1,25 @@
+{
+  "feed_id": "scenario_crash_demo",
+  "provider": "scenario",
+  "scenario_path": "scenarios/bull_with_crash",
+  "start_date": "2030-01-07",
+  "database_path": "../runs/feed_scenario_demo.sqlite",
+  "slippage_bps": 5,
+  "commission_per_order": 1,
+  "cells": [
+    {
+      "name": "trend",
+      "mode": "simple",
+      "symbols": ["AAA"],
+      "initial_cash": 10000,
+      "strategies": [{"entrypoint": "strategies:TrendFollower", "parameters": {"window": 20}}]
+    },
+    {
+      "name": "alternating",
+      "mode": "simple",
+      "symbols": ["BBB"],
+      "initial_cash": 10000,
+      "strategies": [{"entrypoint": "strategies:AlternatingDays"}]
+    }
+  ]
+}

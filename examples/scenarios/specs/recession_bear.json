@@ -1,0 +1,39 @@
+{
+  "name": "recession_bear",
+  "description": "A flat quarter, a prolonged slide, then a weak recovery. Uses S1 and S2, mapped to cell symbols by the suite.",
+  "tags": [
+    "bear",
+    "recession"
+  ],
+  "seed": 23,
+  "start_date": "2030-01-07",
+  "symbols": {
+    "S1": {
+      "price": 50,
+      "beta": 1.1,
+      "idiosyncratic_volatility": 0.15
+    },
+    "S2": {
+      "price": 80,
+      "beta": 0.9,
+      "idiosyncratic_volatility": 0.2
+    }
+  },
+  "segments": [
+    {
+      "sessions": 60,
+      "annual_drift": 0.0,
+      "annual_volatility": 0.2
+    },
+    {
+      "sessions": 150,
+      "annual_drift": -0.35,
+      "annual_volatility": 0.35
+    },
+    {
+      "sessions": 42,
+      "annual_drift": 0.05,
+      "annual_volatility": 0.3
+    }
+  ]
+}

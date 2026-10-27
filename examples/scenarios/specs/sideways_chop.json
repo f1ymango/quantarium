@@ -1,0 +1,25 @@
+{
+  "name": "sideways_chop",
+  "description": "No trend and high volatility.",
+  "tags": [
+    "high_volatility",
+    "sideways"
+  ],
+  "seed": 5,
+  "start_date": "2030-01-07",
+  "symbols": {
+    "AAA": {
+      "price": 50
+    },
+    "BBB": {
+      "price": 80
+    }
+  },
+  "segments": [
+    {
+      "sessions": 252,
+      "annual_drift": 0.0,
+      "annual_volatility": 0.3
+    }
+  ]
+}

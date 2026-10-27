@@ -1,0 +1,28 @@
+{
+  "feed_id": "live_demo_20261020",
+  "provider": "alpaca",
+  "market_feed": "iex",
+  "start_at": "2026-10-20T13:30:00Z",
+  "stop_at": "2026-10-20T20:00:00Z",
+  "database_path": "../runs/live_demo.sqlite",
+  "history_limit": 390,
+  "finalization_delay_seconds": 95,
+  "slippage_bps": 5,
+  "commission_per_order": 0,
+  "cells": [
+    {
+      "name": "live_single",
+      "mode": "simple",
+      "symbols": ["AAPL"],
+      "initial_cash": 10000,
+      "strategies": [{"entrypoint": "strategies:BuyAndHold"}]
+    },
+    {
+      "name": "live_basket",
+      "mode": "complex",
+      "symbols": ["AAPL", "MSFT"],
+      "initial_cash": 10000,
+      "strategies": [{"entrypoint": "strategies:EqualWeight", "allocation": 1}]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "description": "steady_bull with a 35% five-session crash in June, half recovered over 30 sessions.",
+  "end_date": "2030-12-24",
+  "files": {
+    "prices.csv": "970b9f9c3b15cc3840edb85d5e9a96b7b3e9bf39768f075ab033bba85c06ae8f"
+  },
+  "format": "quantarium-scenario-v1",
+  "kind": "transformed",
+  "name": "bull_with_crash",
+  "provenance": {
+    "method": "transform",
+    "operations": [
+      {
+        "drawdown": 0.35,
+        "op": "shock",
+        "recovery_fraction": 0.5,
+        "recovery_sessions": 30,
+        "sessions": 5,
+        "start_date": "2030-06-03"
+      }
+    ],
+    "parent": "steady_bull",
+    "parent_manifest_sha256": "56420f53baf0f68d423265eea39d709bdf17edc33da4620bd45cd2242568784c"
+  },
+  "sessions": 252,
+  "start_date": "2030-01-07",
+  "symbols": [
+    "AAA",
+    "BBB"
+  ],
+  "tags": [
+    "bull",
+    "crash"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "data_path": "action_prices.csv",
+  "actions_path": "actions.csv",
+  "database_path": "../runs/action_example.sqlite",
+  "slippage_bps": 0,
+  "commission_per_order": 0,
+  "cells": [
+    {
+      "name": "action_buy_hold",
+      "mode": "simple",
+      "symbols": ["AAA"],
+      "initial_cash": 1000,
+      "strategies": [
+        {"entrypoint": "strategies:BuyAndHold"}
+      ]
+    }
+  ]
+}

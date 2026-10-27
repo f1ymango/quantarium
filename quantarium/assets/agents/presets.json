@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "api": [
+    {
+      "id": "anthropic",
+      "name": "Anthropic (Claude)",
+      "protocol": "anthropic-messages",
+      "endpoint": "https://api.anthropic.com",
+      "key": "required",
+      "key_env": "ANTHROPIC_API_KEY",
+      "models": [
+        "claude-opus-5-5",
+        "claude-sonnet-5-5",
+        "claude-haiku-5-5",
+        "claude-fable-5-1"
+      ],
+      "discover": true,
+      "billing": "Your Anthropic API account.",
+      "docs": "https://platform.claude.com/docs/en/api/overview"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "protocol": "openai-chat",
+      "endpoint": "https://api.openai.com/v1",
+      "key": "required",
+      "key_env": "OPENAI_API_KEY",
+      "models": [],
+      "discover": true,
+      "billing": "Your OpenAI API account.",
+      "docs": "https://platform.openai.com/docs/api-reference/chat"
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "protocol": "openai-chat",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "key": "required",
+      "key_env": "OPENROUTER_API_KEY",
+      "models": [],
+      "discover": true,
+      "billing": "Your OpenRouter account, which routes to many model providers.",
+      "docs": "https://openrouter.ai/docs/quickstart"
+    },
+    {
+      "id": "groq",
+      "name": "Groq",
+      "protocol": "openai-chat",
+      "endpoint": "https://api.groq.com/openai/v1",
+      "key": "required",
+      "key_env": "GROQ_API_KEY",
+      "models": [],
+      "discover": true,
+      "billing": "Your Groq account.",
+      "docs": "https://console.groq.com/docs/openai"
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral",
+      "protocol": "openai-chat",
+      "endpoint": "https://api.mistral.ai/v1",
+      "key": "required",
+      "key_env": "MISTRAL_API_KEY",
+      "models": [],
+      "discover": true,
+      "billing": "Your Mistral account.",
+      "docs": "https://docs.mistral.ai/api/"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "protocol": "openai-chat",
+      "endpoint": "https://api.deepseek.com/v1",
+      "key": "required",
+      "key_env": "DEEPSEEK_API_KEY",
+      "models": [],
+      "discover": true,
+      "billing": "Your DeepSeek account.",
+      "docs": "https://api-docs.deepseek.com/"
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama (on this computer)",
+      "protocol": "openai-chat",
+      "endpoint": "http://localhost:11434/v1",
+      "key": "none",
+      "key_env": null,
+      "models": [],
+      "discover": true,
+      "billing": "Nothing: the model runs on this computer.",
+      "docs": "https://docs.ollama.com/api/openai-compatibility",
+      "note": "Small local models often handle tool calls poorly. Use Test connection to check."
+    },
+    {
+      "id": "lmstudio",
+      "name": "LM Studio (on this computer)",
+      "protocol": "openai-chat",
+      "endpoint": "http://localhost:1234/v1",
+      "key": "none",
+      "key_env": null,
+      "models": [],
+      "discover": true,
+      "billing": "Nothing: the model runs on this computer.",
+      "docs": "https://lmstudio.ai/docs/app/api/endpoints/openai",
+      "note": "Small local models often handle tool calls poorly. Use Test connection to check."
+    },
+    {
+      "id": "gemini",
+      "name": "Google Gemini",
+      "protocol": "openai-chat",
+      "endpoint": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "key": "required",
+      "key_env": "GEMINI_API_KEY",
+      "models": [],
+      "discover": true,
+      "billing": "Your Gemini API project in Google AI Studio, on its free or paid tier.",
+      "docs": "https://ai.google.dev/gemini-api/docs/openai",
+      "note": "Use a Gemini API key from Google AI Studio. Signing in with a Google account is not offered: Google's terms forbid third-party access to the services behind Gemini CLI."
+    },
+    {
+      "id": "xai",
+      "name": "xAI (Grok)",
+      "protocol": "openai-chat",
+      "endpoint": "https://api.x.ai/v1",
+      "key": "required",
+      "key_env": "XAI_API_KEY",
+      "models": [],
+      "discover": true,
+      "billing": "Your xAI API account.",
+      "docs": "https://docs.x.ai/docs/api-reference",
+      "note": "A SuperGrok or X Premium plan is not used here; xAI's terms for using a plan from other apps are unclear, so only API keys are offered."
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode (pay as you go)",
+      "protocol": "openai-chat",
+      "endpoint": "https://opencode.ai/inference/openai/v1",
+      "key": "required",
+      "key_env": "OPENCODE_API_KEY",
+      "models": [],
+      "discover": false,
+      "billing": "Your OpenCode account's credits. A key needs an account with billing details.",
+      "docs": "https://opencode.ai/docs/zen/",
+      "note": "Only models OpenCode serves through Chat Completions work here. OpenCode's free models can be used only inside OpenCode; for those, connect OpenCode as an agent app instead."
+    },
+    {
+      "id": "custom",
+      "name": "Custom endpoint",
+      "protocol": null,
+      "endpoint": null,
+      "key": "optional",
+      "key_env": null,
+      "models": [],
+      "discover": true,
+      "billing": "Whoever runs the endpoint.",
+      "docs": null,
+      "note": "Any server that speaks OpenAI Chat Completions or the Anthropic Messages API."
+    }
+  ],
+  "runtimes": [
+    {
+      "id": "codex",
+      "name": "Codex (ChatGPT plan)",
+      "profile": "codex-exec",
+      "command": [
+        "codex"
+      ],
+      "experimental": false,
+      "subscription": true,
+      "billing": "Your ChatGPT plan, through your own Codex sign-in.",
+      "conversations": "Codex keeps its own transcript of each chat in its sessions folder. Deleting the chat in Quantarium can remove it.",
+      "terms": "OpenAI supports using a ChatGPT plan through the Codex CLI.",
+      "install": "Install the Codex CLI and sign in with your ChatGPT plan, then restart Quantarium.",
+      "docs": "https://developers.openai.com/codex/cli",
+      "acknowledgement": null
+    },
+    {
+      "id": "claude-code",
+      "name": "Claude Code (Claude plan)",
+      "profile": "claude-code",
+      "command": [
+        "claude"
+      ],
+      "experimental": true,
+      "subscription": true,
+      "billing": "Whatever your own Claude Code is signed in with: a Claude plan or an API key.",
+      "conversations": "Claude Code keeps its own transcript of each chat in its projects folder. Deleting the chat in Quantarium can remove it.",
+      "terms": "Anthropic's terms allow signing in to the unmodified Claude Code with your own plan. Quantarium runs your installed Claude Code as it is and never sees your Claude sign-in. Anthropic has not confirmed this use for open-source apps, so it is experimental.",
+      "install": "Install Claude Code and sign in with claude, then restart Quantarium.",
+      "docs": "https://code.claude.com/docs/en/legal-and-compliance",
+      "acknowledgement": "I choose to connect my own Claude Code to Quantarium. I have read Anthropic's terms, and any action Anthropic takes on my account because of this use is my own responsibility, not Quantarium's or its authors'."
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "profile": "acp",
+      "command": [
+        "opencode",
+        "acp"
+      ],
+      "env": {
+        "OPENCODE_CONFIG_CONTENT": "{\"permission\":{\"*\":\"ask\",\"read\":\"deny\",\"edit\":\"deny\",\"glob\":\"deny\",\"grep\":\"deny\",\"shell\":\"deny\",\"task\":\"deny\",\"skill\":\"deny\",\"lsp\":\"deny\",\"question\":\"deny\",\"webfetch\":\"deny\",\"websearch\":\"deny\",\"external_directory\":\"deny\"},\"tools\":{\"shell\":false,\"bash\":false,\"edit\":false,\"write\":false,\"patch\":false,\"read\":false,\"glob\":false,\"grep\":false,\"list\":false,\"webfetch\":false,\"websearch\":false,\"task\":false,\"todowrite\":false,\"todoread\":false,\"skill\":false,\"lsp\":false,\"question\":false}}"
+      },
+      "experimental": true,
+      "subscription": false,
+      "billing": "Whatever OpenCode is set up to use: its free models, OpenCode credits, or the providers you connected in OpenCode.",
+      "conversations": "OpenCode keeps its own record of each session in its data folder.",
+      "terms": "OpenCode's free models are offered only inside OpenCode; here they run in your own OpenCode. Providers you connected in OpenCode follow their own terms.",
+      "install": "Install OpenCode, run it once to choose a model or connect a provider, then restart Quantarium.",
+      "docs": "https://opencode.ai/docs/acp/",
+      "acknowledgement": null
+    },
+    {
+      "id": "custom-acp",
+      "name": "Custom ACP agent",
+      "profile": "acp",
+      "command": null,
+      "experimental": true,
+      "subscription": false,
+      "billing": "Whatever the agent app is set up to use.",
+      "conversations": "The agent app may keep its own record of each chat.",
+      "terms": "Check the agent app's own terms, and its provider's, before using a subscription through it.",
+      "install": "Any app that speaks the Agent Client Protocol on stdio, such as opencode acp.",
+      "docs": "https://agentclientprotocol.com/get-started/agents",
+      "acknowledgement": null
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Quantarium · Experiment dashboard</title>
+  <style>__QUANTARIUM_CSS__</style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div class="brand"><span class="mark" aria-hidden="true">▦</span> QUANTARIUM <span class="brand-sub">/ RESEARCH</span></div>
+      <div class="hero-content">
+        <div>
+          <p class="eyebrow" id="mode-label">EXPERIMENT</p>
+          <h1 id="experiment-title">Loading experiment</h1>
+          <p class="hero-sub">A saved view of independent strategy cells.</p>
+        </div>
+        <span class="status-pill" id="experiment-status">Loading</span>
+      </div>
+      <div class="meta-line"><span id="snapshot-time"></span><span id="benchmark-label"></span></div>
+    </header>
+
+    <section class="kpis" aria-label="Experiment overview">
+      <div class="kpi"><span>Cells</span><strong id="kpi-cells">—</strong><small id="kpi-cell-detail">—</small></div>
+      <div class="kpi"><span>Best cell return</span><strong id="kpi-return">—</strong><small id="kpi-return-detail">—</small></div>
+      <div class="kpi"><span>Largest drawdown</span><strong id="kpi-drawdown">—</strong><small id="kpi-drawdown-detail">—</small></div>
+      <div class="kpi"><span>Filled orders</span><strong id="kpi-orders">—</strong><small id="kpi-orders-detail">Across all cells</small></div>
+    </section>
+
+    <section class="panel chart-panel" aria-labelledby="chart-heading">
+      <div class="panel-heading">
+        <div><p class="eyebrow">PORTFOLIO PATHS</p><h2 id="chart-heading">Equity indexed to 100</h2></div>
+        <div class="chart-tools"><span id="chart-range"></span><button type="button" id="toggle-all">Show all cells</button></div>
+      </div>
+      <p class="chart-note">Each cell starts at 100. A line stops where that cell's saved valuations stop.</p>
+      <div id="chart-empty" class="empty" hidden>No valuations have been saved yet.</div>
+      <div class="chart-wrap"><svg id="equity-chart" viewBox="0 0 1000 360" role="img" aria-label="Indexed equity paths over time"></svg></div>
+      <div id="legend" class="legend" aria-label="Visible cell paths"></div>
+      <p class="sample-note" id="sample-note"></p>
+    </section>
+
+    <section class="panel" aria-labelledby="table-heading">
+      <div class="panel-heading">
+        <div><p class="eyebrow">CELL LEDGER</p><h2 id="table-heading">Performance by cell</h2></div>
+        <label class="search-label">Find cell <input id="cell-search" type="search" autocomplete="off" placeholder="Name or mode"></label>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr>
+            <th scope="col"><button type="button" data-sort="name">Cell</button></th>
+            <th scope="col"><button type="button" data-sort="mode">Mode</button></th>
+            <th scope="col"><button type="button" data-sort="status">State</button></th>
+            <th scope="col" class="numeric"><button type="button" data-sort="total_return_pct">Return</button></th>
+            <th scope="col" class="numeric"><button type="button" data-sort="max_drawdown_pct">Max drawdown</button></th>
+            <th scope="col" class="numeric"><button type="button" data-sort="bars">Bars</button></th>
+            <th scope="col" class="numeric"><button type="button" data-sort="orders_filled">Filled orders</button></th>
+            <th scope="col" class="numeric"><button type="button" data-sort="traded_notional">Traded notional</button></th>
+          </tr></thead>
+          <tbody id="cell-rows"></tbody>
+        </table>
+      </div>
+      <p id="table-empty" class="empty" hidden>No cells match this search.</p>
+      <p class="table-note">Returns and drawdowns come from saved simulated valuations. A failed cell ends at its last completed bar.</p>
+    </section>
+
+    <footer>
+      <span>Quantarium / local simulation snapshot</span>
+      <span>Regenerate this file to include newer saved bars.</span>
+    </footer>
+  </main>
+  <script id="quantarium-data" type="application/json">__QUANTARIUM_DATA__</script>
+  <script>__QUANTARIUM_JS__</script>
+</body>
+</html>

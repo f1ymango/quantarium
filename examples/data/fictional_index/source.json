@@ -1,0 +1,8 @@
+{
+  "format": "quantarium-data-v1",
+  "supplier": "Quantarium example (invented prices; not market data)",
+  "license_note": "Part of Quantarium's examples. The companies and prices are fictional.",
+  "survivorship": "survivorship_free",
+  "description": "An invented five-member index over 160 sessions: a late listing, a bankruptcy, a cash takeover, and members leaving and rejoining.",
+  "as_of": "2031-08-15"
+}

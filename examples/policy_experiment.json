@@ -1,0 +1,20 @@
+{
+  "data_path": "sample_daily.csv",
+  "database_path": "../runs/policy_example.sqlite",
+  "slippage_bps": 0,
+  "commission_per_order": 0,
+  "cells": [
+    {
+      "name": "paced_basket",
+      "mode": "complex",
+      "symbols": ["AAA", "BBB"],
+      "initial_cash": 10000,
+      "rebalance_every_sessions": 3,
+      "max_position_weight": 0.4,
+      "min_cash_weight": 0.2,
+      "strategies": [
+        {"entrypoint": "strategies:EqualWeight", "allocation": 0.8}
+      ]
+    }
+  ]
+}

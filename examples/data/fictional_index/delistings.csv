@@ -1,0 +1,3 @@
+symbol,date,price,reason
+ECHO,2031-05-12,0.05,bankruptcy
+FXTR,2031-06-23,67.3452,cash takeover

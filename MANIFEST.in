@@ -1,0 +1,2 @@
+# The source archive holds the package and its license; tests live in the repository.
+prune tests

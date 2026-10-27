@@ -1,0 +1,53 @@
+[build-system]
+# 77 is the first setuptools with license expressions (PEP 639).
+requires = ["setuptools>=77,<85"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quantarium"
+version = "1.0.6"
+description = "Test a trading idea honestly before you believe it: a local strategy lab with evidence rules and a safe harness for AI agents"
+readme = "README.md"
+license = "PolyForm-Noncommercial-1.0.0"
+license-files = ["LICENSE.md", "NOTICE"]
+authors = [{ name = "f1ymango" }, { name = "Kandodaki" }]
+requires-python = ">=3.11"
+dependencies = ['tzdata>=2025.1,<2027; sys_platform == "win32"']
+keywords = ["backtesting", "trading", "portfolio", "simulation", "research", "ai-agents", "mcp"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.urls]
+Homepage = "https://github.com/f1ymango/quantarium"
+Repository = "https://github.com/f1ymango/quantarium"
+Issues = "https://github.com/f1ymango/quantarium/issues"
+Changelog = "https://github.com/f1ymango/quantarium/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+live = ["websockets>=17,<18"]
+# The built-in assistant's model providers; keyring stores API keys in the system keychain.
+assistant = ["anthropic>=1.17,<2", "openai>=3.35,<4", "keyring>=25,<26"]
+# Training stays out of the simulator process; model cards and inference use stdlib only.
+ml = ["numpy>=1.26,<3", "scikit-learn>=1.4,<2"]
+
+[project.scripts]
+quantarium = "quantarium.__main__:main"
+
+[tool.setuptools.packages.find]
+# barloom is the old name, kept so imports written before 1.0 keep working.
+include = ["quantarium*", "barloom"]
+
+[tool.setuptools.package-data]
+quantarium = ["assets/*.html", "assets/*.css", "assets/*.js", "assets/app/*", "assets/app/**/*", "assets/starter/*", "assets/agents/*"]

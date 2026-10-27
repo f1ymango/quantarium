@@ -1,0 +1,28 @@
+{
+  "name": "steady_bull",
+  "description": "A year of steady gains with moderate volatility.",
+  "tags": [
+    "bull"
+  ],
+  "seed": 11,
+  "start_date": "2030-01-07",
+  "symbols": {
+    "AAA": {
+      "price": 50,
+      "beta": 1.0,
+      "idiosyncratic_volatility": 0.15
+    },
+    "BBB": {
+      "price": 80,
+      "beta": 0.8,
+      "idiosyncratic_volatility": 0.2
+    }
+  },
+  "segments": [
+    {
+      "sessions": 252,
+      "annual_drift": 0.15,
+      "annual_volatility": 0.15
+    }
+  ]
+}

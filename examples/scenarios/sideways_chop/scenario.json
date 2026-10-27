@@ -1,0 +1,49 @@
+{
+  "description": "No trend and high volatility.",
+  "end_date": "2030-12-24",
+  "files": {
+    "prices.csv": "ee00060db4232826a430326d2c8187dbf0613893c0899281f2a601b54bb98f5a"
+  },
+  "format": "quantarium-scenario-v1",
+  "kind": "synthetic",
+  "name": "sideways_chop",
+  "provenance": {
+    "generator": "correlated_random_walk_v1",
+    "method": "generate",
+    "spec": {
+      "description": "No trend and high volatility.",
+      "name": "sideways_chop",
+      "seed": 5,
+      "segments": [
+        {
+          "annual_drift": 0.0,
+          "annual_volatility": 0.3,
+          "sessions": 252
+        }
+      ],
+      "start_date": "2030-01-07",
+      "symbols": {
+        "AAA": {
+          "price": 50
+        },
+        "BBB": {
+          "price": 80
+        }
+      },
+      "tags": [
+        "high_volatility",
+        "sideways"
+      ]
+    }
+  },
+  "sessions": 252,
+  "start_date": "2030-01-07",
+  "symbols": [
+    "AAA",
+    "BBB"
+  ],
+  "tags": [
+    "high_volatility",
+    "sideways"
+  ]
+}

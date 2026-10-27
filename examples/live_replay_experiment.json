@@ -1,0 +1,28 @@
+{
+  "feed_id": "live_replay_demo",
+  "provider": "alpaca",
+  "market_feed": "iex",
+  "start_at": "2024-01-02T14:30:00Z",
+  "stop_at": "2024-01-02T14:34:00Z",
+  "database_path": "../runs/live_replay_demo.sqlite",
+  "history_limit": 4,
+  "finalization_delay_seconds": 95,
+  "slippage_bps": 0,
+  "commission_per_order": 0,
+  "cells": [
+    {
+      "name": "live_single",
+      "mode": "simple",
+      "symbols": ["AAPL"],
+      "initial_cash": 1000,
+      "strategies": [{"entrypoint": "strategies:BuyAndHold"}]
+    },
+    {
+      "name": "live_basket",
+      "mode": "complex",
+      "symbols": ["AAPL", "MSFT"],
+      "initial_cash": 1000,
+      "strategies": [{"entrypoint": "strategies:EqualWeight"}]
+    }
+  ]
+}

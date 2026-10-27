@@ -1,0 +1,28 @@
+{
+  "data_path": "sample_daily.csv",
+  "database_path": "../runs/example.sqlite",
+  "slippage_bps": 5,
+  "commission_per_order": 1,
+  "cells": [
+    {
+      "name": "single_stock",
+      "mode": "simple",
+      "symbols": ["AAA"],
+      "initial_cash": 10000,
+      "strategies": [
+        {"entrypoint": "strategies:BuyAndHold"}
+      ]
+    },
+    {
+      "name": "two_sleeves",
+      "mode": "complex",
+      "symbols": ["AAA", "BBB"],
+      "initial_cash": 10000,
+      "strategies": [
+        {"entrypoint": "strategies:EqualWeight", "allocation": 0.6},
+        {"entrypoint": "strategies:RecentLeader", "allocation": 0.4}
+      ]
+    }
+  ]
+}
+
