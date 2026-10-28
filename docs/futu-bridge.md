@@ -4,7 +4,9 @@ Quantarium reads Futu (moomoo) daily bars through a small bridge that runs in it
 
 This repository distributes the bridge's compatibility code, not Futu market data. Each user obtains data through their own account for their own local use and checks the provider's terms. Keep fetched prices and datasets derived from them out of Git and the public repository; `/data/` and `/scenarios/` are ignored for local work.
 
-Automated bridge tests use fake candles and no Futu account. The maintainer checks the first real run by hand.
+Automated bridge tests use fake candles and no Futu account. The maintainer performed the first real run by hand.
+
+The maintainer has now completed a local OpenD fetch by hand. Its CSV passed Quantarium's daily-bar reader and a private Static replay. This verifies the connection and file-format path on that machine; it does not establish broad history coverage, data quality, or a strategy result. The fetched file, replay config, and result remain in Git-ignored local folders.
 
 ## OpenD settings
 
@@ -30,6 +32,8 @@ Automated bridge tests use fake candles and no Futu account. The maintainer chec
 
 ## Fetching bars
 
+Run the relative-path example below from the Quantarium checkout. If PowerShell opens in another folder, such as `C:\WINDOWS\system32`, first run `Set-Location C:\Projects\quantarium` or use absolute paths for both the script and output.
+
 ```bash
 C:/Projects/quantarium-futu/.venv/Scripts/python.exe -I tools/futu_bridge/bridge.py --codes US.AAPL,US.MSFT --from 2024-01-02 --through 2024-06-28 --output data/futu_us.csv
 ```
@@ -42,7 +46,36 @@ C:/Projects/quantarium-futu/.venv/Scripts/python.exe -I tools/futu_bridge/bridge
 
 The output is a Static price file: use it as a Static `data_path`, cut scenarios from it with `scenario slice`, or follow it with a `csv` Feed. The `csv` Feed checks sessions against the NYSE calendar, so use it for US codes; bars from other markets work in Static runs and scenarios.
 
+The bridge maps Futu's daily `time_key`, `open`, `high`, `low`, `close`, and `volume` fields to Quantarium's `date,symbol,open,high,low,close,volume` CSV. It strips the market prefix from each Futu code by default. A local file can be checked with Quantarium's reader and used as a Static config's `data_path` without another OpenD request. Put a personal config in ignored `private/`, with `data_path` relative to that config. For example, save this as `private/futu_research.json` after fetching `data/futu_research.csv`:
+
+```json
+{
+  "data_path": "../data/futu_research.csv",
+  "database_path": "../runs/futu_research.sqlite",
+  "strategy_root": "../examples",
+  "cells": [{
+    "name": "futu_research",
+    "mode": "simple",
+    "symbols": ["AAPL"],
+    "initial_cash": 10000,
+    "strategies": [{"entrypoint": "strategies:BuyAndHold"}]
+  }]
+}
+```
+
+Use the **Quantarium** Python environment, not the separate Futu bridge environment. From the checkout on Windows, run `& .\.venv\Scripts\python.exe -I -m quantarium run private/futu_research.json`. For forward-adjusted bars, omit `actions_path` so corporate actions are not applied again. The example strategy is a format check, not a recommendation or an evidence claim.
+
 Futu limits how much candle history an account may request in a period, depending on the account; its OpenAPI documentation gives the current quota. For raw prices, fetch a long history once and then append with `--adjust none`. For forward-adjusted prices, re-fetch the full range after a corporate action.
+
+## Connection troubleshooting
+
+If the SDK reports `WSAECONNREFUSED` on Windows, first check the **local** OpenD listener. Open the GUI, sign in until it shows Connected, and verify that its API IP is `127.0.0.1` and API Port matches the bridge's `--port` (default `11111`). In PowerShell:
+
+```powershell
+Test-NetConnection 127.0.0.1 -Port 11111
+```
+
+`TcpTestSucceeded : False` means there is no reachable listener at that address and port; check whether OpenD is running and whether its API settings match. `True` verifies the TCP listener, but a successful bridge fetch is still needed to establish that the quote request works. The local refusal is not evidence that VPN settings need changing. Futu's [OpenD overview](https://openapi.futunn.com/futu-api-doc/en/opend/opend-intro.html) says its socket service starts after login, and its [connection FAQ](https://openapi.futunn.com/futu-api-doc/en/qa/opend.html) calls out mismatched ports and listening addresses. Do not paste OpenD configuration, logs, or account details into support reports.
 
 ## Alpaca
 

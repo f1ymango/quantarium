@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "quantarium"
-version = "1.0.10"
+version = "1.0.11"
 description = "Test a trading idea honestly before you believe it: a local strategy lab with evidence rules and a safe harness for AI agents"
 readme = "README.md"
 license = "PolyForm-Noncommercial-1.0.0"

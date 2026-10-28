@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.11 — 2026-10-29
+
+Record the first local Futu connection check and its setup lessons.
+
+- The maintainer's OpenD fetch produced a local file that passed Quantarium's daily-bar reader and a private Static replay. No provider data or account details were added to the repository.
+- Document the listener check for `WSAECONNREFUSED`, the Futu-to-CSV field mapping, working-directory and Python-environment requirements, and the private Static config path.
+
 ## v1.0.10 — 2026-10-29
 
 Harden the Futu market-data bridge.
