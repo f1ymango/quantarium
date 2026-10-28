@@ -2,7 +2,9 @@
 
 Quantarium reads Futu (moomoo) daily bars through a small bridge that runs in its own Python environment, like the backtrader cross-check. Quantarium never imports Futu's package and gains no dependency; the bridge writes a price file and Quantarium reads it. The bridge fetches **market data only**: it has no trading code, and Quantarium places no orders (`AGENTS.md`, section 1).
 
-Quantarium's developers do not have Futu accounts, so the bridge is tested with fake candles. The first real run should be checked by hand.
+This repository distributes the bridge's compatibility code, not Futu market data. Each user obtains data through their own account for their own local use and checks the provider's terms. Keep fetched prices and datasets derived from them out of Git and the public repository; `/data/` and `/scenarios/` are ignored for local work.
+
+Automated bridge tests use fake candles and no Futu account. The maintainer checks the first real run by hand.
 
 ## Setup
 

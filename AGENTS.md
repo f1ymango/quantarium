@@ -8,6 +8,8 @@ These rules apply to every AI coding agent that works in this repository, includ
 
 A local, research-only trading simulator. It never places real orders. Its server listens on loopback only. Agent features are off by default and bounded by checks in code, not by model instructions. Keep it that way.
 
+Quantarium publishes compatibility code, documented data formats, and invented examples, never usable real market data. Provider data fetched through a user's account stays local to that user. Do not commit provider-sourced prices, datasets derived from them, or bridge output to the repository. Publishing a connector does not confer data rights on its users; each user supplies and checks their own data source and terms.
+
 ## 2. Dependencies and installs
 
 Most current attacks arrive through packages. So:
@@ -27,6 +29,7 @@ Most current attacks arrive through packages. So:
 - Broker credentials live only in `APCA_API_KEY_ID` and `APCA_API_SECRET_KEY`. Model keys live only in environment variables or the keychain, never in configs, captures, logs, or responses.
 - Never use the maintainer's accounts to test: no real Claude Code turns, no GitHub tokens, no Alpaca requests, no paid model calls. Use fakes and local servers (Ollama) instead, unless the maintainer runs the test themselves.
 - Before every commit, scan the staged diff for key-shaped strings (`sk-`, `sk-ant-`, `ghp_`, `github_pat_`, `xai-`, `AIza`, `AKIA`, `-----BEGIN`, and Quantarium's agent tokens, `qtm_` and the pre-1.0 `blm_`) and for personal data: holdings, watch lists, emails, account numbers. Stop if anything matches.
+- Also scan the staged diff for real market data and provider-derived datasets. Stop if anything matches.
 - Personal holdings and preferences go in `/holdings.json` or `/private/`, which Git ignores.
 
 ## 4. Git and GitHub

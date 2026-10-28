@@ -4,11 +4,11 @@
 
 **Test a trading idea honestly, on your own or with AI agents, before you believe it.**
 
-**Version: 1.0.8.** See the [changelog](CHANGELOG.md) for its contents and known limits. Licensed for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md).
+**Version: 1.0.9.** See the [changelog](CHANGELOG.md) for its contents and known limits. Licensed for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md).
 
 Quantarium is a local lab for testing stock-portfolio strategies. It simulates trading and never places real orders. It runs on your computer, listens only on a loopback address, and its core uses only Python's standard library.
 
-> **Quantarium supplies no market data and gives no financial advice.** It ships only invented example prices; bring your own data and check its terms. A result describes a simulation of the tested period under stated assumptions, not what will happen with real money.
+> **Quantarium supplies no market data and gives no financial advice.** Its public repository publishes compatibility code, data formats, and invented examples, never usable real market data. Bring your own data, keep provider-sourced prices and their derived datasets local, and check your provider's terms. A result describes a simulation of the tested period under stated assumptions, not what will happen with real money.
 
 ![Home: each cell is a strategy with its own simulated account](https://raw.githubusercontent.com/f1ymango/quantarium/main/docs/images/home.png)
 
@@ -307,6 +307,8 @@ The Lab reads the declaration. A verdict on real-price data not declared survivo
 ## Futu OpenAPI market data
 
 Futu (moomoo) daily bars come in through a bridge that runs in its own Python environment, so Quantarium gains no dependency: the bridge asks your local Futu OpenD gateway for candles and writes a Quantarium price file. It fetches market data only and has no trading code. Setup and use are in [docs/futu-bridge.md](docs/futu-bridge.md).
+
+The bridge is public compatibility code. Its downloaded bars are the account holder's local data, not part of the repository; users obtain their own Futu access and check the applicable data terms.
 
 ## Live Feed with Alpaca
 

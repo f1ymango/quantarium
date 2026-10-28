@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.9 — 2026-10-28
+
+State the data boundary explicitly.
+
+- The public repository provides compatibility code, data formats, and invented examples, never usable real market data. Provider-sourced prices and datasets derived from them remain local to each user and are not committed.
+- The Futu bridge guide clarifies that users obtain access through their own accounts and check their provider's data terms. It also distinguishes fake-candle automated tests from the maintainer's first real check.
+
+**Results change:** None.
+
 ## v1.0.8 — 2026-10-28
 
 One name everywhere.
