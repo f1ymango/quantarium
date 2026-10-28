@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.10 — 2026-10-29
+
+Harden the Futu market-data bridge.
+
+- Resolve `localhost` to `127.0.0.1` before connecting to OpenD, and reject invalid ports.
+- Restrict output paths inside the checkout to the local `data/`, `scenarios/`, and `private/` folders after resolving paths and links.
+- Refuse append with forward-adjusted history, whose earlier prices can change after corporate actions. Document OpenD's local-only settings and the SDK log location.
+- Add fake-data misuse tests for connection and output boundaries. No real Futu account was used in development or tests.
+
 ## v1.0.9 — 2026-10-28
 
 State the data boundary explicitly.

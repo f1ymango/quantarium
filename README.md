@@ -4,7 +4,7 @@
 
 **Test a trading idea honestly, on your own or with AI agents, before you believe it.**
 
-**Version: 1.0.9.** See the [changelog](CHANGELOG.md) for its contents and known limits. Licensed for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md).
+**Version: 1.0.10.** See the [changelog](CHANGELOG.md) for its contents and known limits. Licensed for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md).
 
 Quantarium is a local lab for testing stock-portfolio strategies. It simulates trading and never places real orders. It runs on your computer, listens only on a loopback address, and its core uses only Python's standard library.
 

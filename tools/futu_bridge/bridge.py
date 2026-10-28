@@ -7,8 +7,8 @@ Runs in its own environment, never inside Quantarium (docs/futu-bridge.md):
 
 It asks Futu's OpenD gateway, which the user runs and signs in to on this
 computer, for daily candles, and writes a Static-format CSV (date, symbol,
-open, high, low, close, volume). With ``--append`` it adds only sessions after
-each symbol's last date, so the file can feed a ``csv`` Feed experiment.
+open, high, low, close, volume). With ``--adjust none --append`` it adds only
+sessions after each symbol's last date, so the file can feed a ``csv`` Feed experiment.
 
 The bridge needs no keys: OpenD holds the login. It connects only to a
 loopback address, uses only Futu's quote context, and has no trading code.
@@ -27,6 +27,8 @@ from datetime import date
 from pathlib import Path
 
 LOOPBACK = {"127.0.0.1", "localhost", "::1"}
+CHECKOUT = Path(__file__).resolve().parents[2]
+PRIVATE_OUTPUT_FOLDERS = {"data", "scenarios", "private"}
 HEADER = ["date", "symbol", "open", "high", "low", "close", "volume"]
 CODE = re.compile(r"(US|HK|SH|SZ|SG|JP|AU)\.[A-Z0-9.\-]{1,20}")
 SYMBOL = re.compile(r"[A-Z0-9][A-Z0-9.\-]{0,19}")
@@ -89,8 +91,21 @@ def last_dates(path: Path) -> dict[str, str]:
     return last
 
 
+def checked_output(path: Path) -> Path:
+    """Resolve output links and keep checkout writes in user-local folders."""
+    resolved = path.resolve()
+    try:
+        relative = resolved.relative_to(CHECKOUT)
+    except ValueError:
+        return resolved
+    if not relative.parts or relative.parts[0] not in PRIVATE_OUTPUT_FOLDERS:
+        raise ValueError("--output inside Quantarium must be under data/, scenarios/, or private/")
+    return resolved
+
+
 def write(path: Path, rows: list[list], *, append: bool) -> int:
     """Write rows, or append those after each symbol's last date; returns the rows written."""
+    path = checked_output(path)
     if append and path.is_file():
         last = last_dates(path)
         rows = [row for row in rows if row[0] > last.get(row[1], "")]
@@ -111,6 +126,10 @@ def fetch(codes: dict[str, str], start: date, through: date, *, host: str, port:
     """Ask OpenD for daily candles; only the quote context is used."""
     if host not in LOOPBACK:
         raise ValueError("The bridge talks only to OpenD on this computer (127.0.0.1, localhost, or ::1)")
+    if not 1 <= port <= 65535:
+        raise ValueError("OpenD port must be between 1 and 65535")
+    if host == "localhost":
+        host = "127.0.0.1"
     import futu  # installed only in the bridge's own environment
 
     context = futu.OpenQuoteContext(host=host, port=port)
@@ -147,10 +166,14 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
     if args.start > args.through:
         parser.error("--from must not follow --through")
+    if args.append and args.adjust == "forward":
+        raise ValueError("Cannot --append forward-adjusted history: forward-adjusted history changes after each "
+                         "corporate action. Re-fetch the whole range instead, or use --adjust none.")
+    output = checked_output(args.output)
     rows = fetch(parse_codes(args.codes), args.start, args.through, host=args.host, port=args.port,
                  adjust=args.adjust)
-    written = write(args.output, rows, append=args.append)
-    print(f"Wrote {written} bars to {args.output}")
+    written = write(output, rows, append=args.append)
+    print(f"Wrote {written} bars to {output}")
 
 
 if __name__ == "__main__":

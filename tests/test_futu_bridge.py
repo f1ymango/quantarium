@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from quantarium.data import load_daily_csv
 
@@ -70,6 +71,13 @@ class FutuBridgeTests(unittest.TestCase):
                 bridge.to_rows("AAPL", [record])
         with self.assertRaisesRegex(ValueError, "two candles"):
             bridge.to_rows("AAPL", [candle("2024-03-04", 100), candle("2024-03-04", 100)])
+
+    def test_forward_adjusted_history_cannot_be_appended(self) -> None:
+        with tempfile.TemporaryDirectory() as folder, mock.patch.object(
+                bridge, "fetch", side_effect=AssertionError("fetch must not run")):
+            with self.assertRaisesRegex(ValueError, "(?i)forward-adjusted history changes.*re-fetch.*--adjust none"):
+                bridge.main(["--codes", "US.AAPL", "--from", "2024-03-04", "--through", "2024-03-08",
+                             "--output", str(Path(folder) / "bars.csv"), "--append"])
 
 
 if __name__ == "__main__":
