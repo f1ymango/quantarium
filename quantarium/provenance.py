@@ -19,6 +19,7 @@ import threading
 from datetime import datetime, timezone
 from pathlib import Path
 
+from . import atomic
 from .errors import QuantariumError
 
 REGISTRY = ".quantarium/script-provenance.json"
@@ -55,7 +56,7 @@ def _registry_for(path: Path) -> Path | None:
 
 def _load(registry: Path) -> dict:
     try:
-        data = json.loads(registry.read_text(encoding="utf-8"))
+        data = json.loads(atomic.read_text(registry))
     except (OSError, ValueError):
         # An unreadable registry must not let agent code through.
         raise UnreviewedScript(f"Script provenance is unreadable: {registry}")
@@ -80,7 +81,7 @@ def _record(workspace_root: Path, key: str, data: bytes, connection: dict) -> No
     registry.parent.mkdir(parents=True, exist_ok=True)
     temporary = registry.with_suffix(".tmp")
     temporary.write_text(json.dumps(entries, indent=2) + "\n", encoding="utf-8")
-    os.replace(temporary, registry)
+    atomic.replace(temporary, registry)
 
 
 def entries(workspace_root: Path) -> list[dict]:
@@ -93,7 +94,7 @@ def entries(workspace_root: Path) -> list[dict]:
         if not isinstance(entry, dict):
             continue
         path = workspace_root / str(entry.get("key", ""))
-        current = path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == digest
+        current = path.is_file() and hashlib.sha256(atomic.read_bytes(path)).hexdigest() == digest
         listed.append({**entry, "sha256": digest, "current": current})
     return sorted(listed, key=lambda item: item.get("written_utc") or "", reverse=True)
 
@@ -113,7 +114,7 @@ def _mark(workspace_root: Path, digest: object) -> dict:
     entry.update({"state": "reviewed", "reviewed_utc": datetime.now(timezone.utc).isoformat()})
     temporary = registry.with_suffix(".tmp")
     temporary.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-    os.replace(temporary, registry)
+    atomic.replace(temporary, registry)
     return {**entry, "sha256": digest}
 
 
@@ -178,7 +179,7 @@ class _ImportGuard:
         if any(resolved.is_relative_to(folder) for folder in self.trusted):
             return None
         try:
-            data = file.read_bytes()
+            data = atomic.read_bytes(file)
         except OSError:
             return None
         refuse_unreviewed(file, data)

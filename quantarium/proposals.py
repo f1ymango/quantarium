@@ -12,11 +12,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import secrets
 import threading
 from datetime import datetime, timezone
 
+from . import atomic
 from .errors import QuantariumError, NotFound
 from .scenario import load_scenario
 
@@ -55,7 +55,7 @@ class Proposals:
 
     def _read(self) -> list[dict]:
         try:
-            data = json.loads(self.path.read_text(encoding="utf-8"))
+            data = json.loads(atomic.read_text(self.path))
         except (OSError, ValueError):
             return []
         return [item for item in data if isinstance(item, dict)] if isinstance(data, list) else []
@@ -64,7 +64,7 @@ class Proposals:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temporary = self.path.with_suffix(".tmp")
         temporary.write_text(json.dumps(items, indent=2) + "\n", encoding="utf-8")
-        os.replace(temporary, self.path)
+        atomic.replace(temporary, self.path)
 
     def pins(self, action: str, params: dict) -> dict:
         """Fingerprints of the cells and scripts a proposal acts on."""
@@ -81,18 +81,18 @@ class Proposals:
                 if not isinstance(key, str):
                     continue
                 path = self.workspace.resolve(key)
-                scripts[key] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+                scripts[key] = hashlib.sha256(atomic.read_bytes(path)).hexdigest() if path.is_file() else None
             model_key = record["spec"].get("model_card")
             if isinstance(model_key, str) and model_key:
                 path = self.workspace.resolve(model_key)
-                models[model_key] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+                models[model_key] = hashlib.sha256(atomic.read_bytes(path)).hexdigest() if path.is_file() else None
         scenarios = {}
         if action == "lab-register":
             for key in params.get("scenarios", []):
                 scenario = load_scenario(self.workspace.resolve(key))
                 scenarios[key] = {"manifest_sha256": scenario.manifest_sha256,
-                                  "prices_sha256": hashlib.sha256(scenario.prices_path.read_bytes()).hexdigest(),
-                                  "actions_sha256": hashlib.sha256(scenario.actions_path.read_bytes()).hexdigest()
+                                  "prices_sha256": hashlib.sha256(atomic.read_bytes(scenario.prices_path)).hexdigest(),
+                                  "actions_sha256": hashlib.sha256(atomic.read_bytes(scenario.actions_path)).hexdigest()
                                   if scenario.actions_path else None}
         return {"cells": cells, "scripts": scripts,
                 **({"models": models} if models else {}),

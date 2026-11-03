@@ -6,12 +6,12 @@ import copy
 import hashlib
 import json
 import math
-import os
 import secrets
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
 
+from . import atomic
 from .agents import AgentSettings
 from .config import _cells, cost_model
 from .errors import QuantariumError, NotFound
@@ -37,7 +37,7 @@ def _now() -> str:
 
 
 def _hash(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(atomic.read_bytes(path)).hexdigest()
 
 
 def _canonical(value: object) -> str:
@@ -114,7 +114,7 @@ class Lab:
     def _read(self) -> list[dict]:
         if not self.path.is_file():
             return []
-        data = json.loads(self.path.read_text(encoding="utf-8"))
+        data = json.loads(atomic.read_text(self.path))
         if not isinstance(data, list) or not all(isinstance(item, dict) for item in data):
             raise ValueError("The Lab ledger is not a list of experiments")
         return data
@@ -123,7 +123,7 @@ class Lab:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temporary = self.path.with_suffix(".tmp")
         temporary.write_text(json.dumps(items, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-        os.replace(temporary, self.path)
+        atomic.replace(temporary, self.path)
 
     def list(self) -> list[dict]:
         return list(reversed(self._read()))

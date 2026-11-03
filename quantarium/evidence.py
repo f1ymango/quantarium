@@ -18,7 +18,7 @@ import re
 from pathlib import Path
 
 from .legacy import is_format
-from . import __version__, strictjson
+from . import __version__, atomic, strictjson
 
 FORMAT = "quantarium-evidence-report-v1"
 _RECORD = re.compile(r'<script type="application/json" id="(?:quantarium|barloom)-record" data-sha256="([0-9a-f]{64})">(.*?)</script>',
@@ -165,7 +165,7 @@ def verify(page: str, workspace_root: Path | None = None) -> dict:
     record = document.get("record") or {}
     if workspace_root is not None:
         ledger = Path(workspace_root) / STORE
-        items = json.loads(ledger.read_text(encoding="utf-8")) if ledger.is_file() else []
+        items = json.loads(atomic.read_text(ledger)) if ledger.is_file() else []
         current = next((item for item in items if item.get("id") == record.get("id")), None)
         checks["in_ledger"] = current is not None
         # Reports name paths as <workspace> and ~; those made before 1.0 kept them as they were.

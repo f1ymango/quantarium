@@ -179,9 +179,10 @@ class InjectionTests(unittest.TestCase):
         self.api.assistant.provider_for = lambda connection: provider
         chat = self.api.command("chat-create", {"connection_id": connection["id"]})
         self.api.command("chat-send", {"id": chat["id"], "text": "Look at my scenarios"})
-        deadline = time.monotonic() + 30
+        deadline = time.monotonic() + 180
         while self.api.assistant.busy(chat["id"]) and time.monotonic() < deadline:
             time.sleep(0.02)
+        self.assertFalse(self.api.assistant.busy(chat["id"]), "the turn did not finish within 180 seconds")
         chat = self.api.get(f"agents/chats/{chat['id']}", {})
         results = [block for message in chat["messages"] for block in message["content"] if block["type"] == "tool_result"]
         self.assertFalse(results[0]["is_error"])

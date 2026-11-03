@@ -18,6 +18,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Mapping
 
+from . import atomic
 from .data import check_calendar, load_actions_csv, load_daily_csv
 from .journal import Journal
 from .legacy import current_entrypoint, current_value
@@ -67,7 +68,7 @@ def _load_strategy(entrypoint: str, parameters: dict[str, Any], root: Path, *,
     with _importable(root):
         local_file = root / f"{module_name}.py" if module_name.isidentifier() else None
         if local_file is not None and local_file.is_file():
-            source_bytes = local_file.read_bytes()
+            source_bytes = atomic.read_bytes(local_file)
             digest = hashlib.sha256(source_bytes).hexdigest()
             if unreviewed_entry(local_file, source_bytes) is not None:
                 if not sandbox_unreviewed:
@@ -98,10 +99,10 @@ def _load_strategy(entrypoint: str, parameters: dict[str, Any], root: Path, *,
                     stem = base.joinpath(*parts[:depth])
                     for candidate in (stem.with_suffix(".py"), stem / "__init__.py"):
                         if candidate.is_file():
-                            refuse_unreviewed(candidate, candidate.read_bytes())
+                            refuse_unreviewed(candidate, atomic.read_bytes(candidate))
             strategy_class = getattr(importlib.import_module(module_name), class_name)
             source = inspect.getsourcefile(strategy_class)
-            digest = hashlib.sha256(Path(source).read_bytes()).hexdigest() if source else None
+            digest = hashlib.sha256(atomic.read_bytes(Path(source))).hexdigest() if source else None
         strategy = strategy_class(**parameters)
         if not callable(getattr(strategy, method, None)):
             raise ValueError(f"{entrypoint} needs an {method}(context{', sleeves' if method == 'allocate' else ''}) method")
@@ -1033,7 +1034,7 @@ def _allocator_digest(cell: CellSpec, strategy_root: Path) -> str | None:
         return None
     module = cell.allocator.entrypoint.split(":", 1)[0]
     path = strategy_root.resolve() / f"{module}.py"
-    return hashlib.sha256(path.read_bytes()).hexdigest() if module.isidentifier() and path.is_file() else None
+    return hashlib.sha256(atomic.read_bytes(path)).hexdigest() if module.isidentifier() and path.is_file() else None
 
 
 def run_static(spec: RunSpec, config_json: str, strategy_root: Path,
@@ -1047,7 +1048,7 @@ def run_static(spec: RunSpec, config_json: str, strategy_root: Path,
     universe = _universe(spec, days, tape, symbols) if spec.changing_universe else None
     if universe is not None:
         metadata = {**(metadata or {}), "changing_universe": {
-            name: hashlib.sha256(Path(path).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+            name: hashlib.sha256(atomic.read_bytes(Path(path)).replace(b"\r\n", b"\n")).hexdigest()
             for name, path in (("delistings", spec.delistings_path), ("membership", spec.membership_path)) if path}}
     if spec.symbol_map:
         mapping = json.dumps(dict(spec.symbol_map), sort_keys=True)

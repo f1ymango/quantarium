@@ -18,13 +18,13 @@ import hashlib
 import hmac
 import json
 import math
-import os
 import re
 import secrets
 import threading
 from datetime import date, datetime, timedelta, timezone
 from importlib import resources
 
+from . import atomic
 from . import presets
 
 SETTINGS_FILE = ".quantarium/agents.json"
@@ -217,7 +217,7 @@ class AgentSettings:
 
     def _read(self) -> dict:
         try:
-            data = json.loads(self.path.read_text(encoding="utf-8"))
+            data = json.loads(atomic.read_text(self.path))
         except (OSError, ValueError):
             return {}
         return data if isinstance(data, dict) else {}
@@ -226,7 +226,7 @@ class AgentSettings:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temporary = self.path.with_suffix(".tmp")
         temporary.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-        os.replace(temporary, self.path)
+        atomic.replace(temporary, self.path)
 
     def _listed(self, data: dict) -> list[dict]:
         listed = data.get("connections")

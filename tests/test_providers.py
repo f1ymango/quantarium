@@ -112,9 +112,10 @@ class AssistantWithProvider(unittest.TestCase):
         self.api.assistant.provider_for = make_provider
         chat = self.api.command("chat-create", {"connection_id": self.connection["id"]})
         self.api.command("chat-send", {"id": chat["id"], "text": "What cells do I have?"})
-        deadline = time.monotonic() + 30
+        deadline = time.monotonic() + 180
         while self.api.assistant.busy(chat["id"]) and time.monotonic() < deadline:
             time.sleep(0.02)
+        self.assertFalse(self.api.assistant.busy(chat["id"]), "the turn did not finish within 180 seconds")
         return self.api.get(f"agents/chats/{chat['id']}", {})
 
 

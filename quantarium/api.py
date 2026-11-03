@@ -23,7 +23,7 @@ from pathlib import Path
 from queue import Queue
 from typing import Any, Callable
 
-from . import __version__
+from . import __version__, atomic
 from .analysis import read_analysis
 from .config import _finite_nonnegative, cost_model, load_config, load_feed_config, strategy_root
 from .data import load_daily_csv
@@ -601,7 +601,7 @@ class Api:
         grant = {"connection_id": connection["id"], "model": connection["model"],
                  "workspace": str(self.workspace.root), "tape": previous.get("tape") or f".quantarium/tapes/{record['id']}.jsonl",
                  "mode": params.get("mode", "record"),
-                 "approved_script_sha256": hashlib.sha256(self.workspace.resolve(script).read_bytes()).hexdigest(),
+                 "approved_script_sha256": hashlib.sha256(atomic.read_bytes(self.workspace.resolve(script))).hexdigest(),
                  **{key: params.get(key, default) for key, default in (
                      ("max_calls", 300), ("max_tokens", 300_000), ("max_output_tokens", 2000),
                      ("max_estimated_cost_usd", 1.0), ("input_usd_per_million", 0.0),
@@ -704,7 +704,7 @@ class Api:
         for item in listed:
             path = self.workspace.resolve(item["key"])
             item["agent_unreviewed"] = bool(root) and path.is_file() and \
-                provenance.is_unreviewed(root, path.read_bytes(), item["key"])
+                provenance.is_unreviewed(root, atomic.read_bytes(path), item["key"])
         return listed
 
     def _holdings(self, params: dict) -> dict:

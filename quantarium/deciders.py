@@ -35,6 +35,7 @@ import weakref
 from datetime import date, datetime, timezone
 from pathlib import Path
 
+from . import atomic
 from . import strictjson
 from .decisions import TAPE_FORMAT, _entry
 
@@ -60,7 +61,7 @@ def _read(workspace_root: Path) -> list[dict]:
     path = Path(workspace_root) / SETTINGS
     if not path.is_file():
         return []
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = json.loads(atomic.read_text(path))
     return data.get("deciders", []) if isinstance(data, dict) else []
 
 
@@ -69,7 +70,7 @@ def _write(workspace_root: Path, items: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
     temporary.write_text(json.dumps({"deciders": items}, indent=2) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
+    atomic.replace(temporary, path)
 
 
 def listing(workspace_root: Path) -> list[dict]:

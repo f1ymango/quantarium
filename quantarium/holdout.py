@@ -12,13 +12,13 @@ approves; its results stay visible only to the user.
 from __future__ import annotations
 
 import json
-import os
 import sqlite3
 import threading
 from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 
+from . import atomic
 from .data import load_daily_csv
 from .errors import QuantariumError
 from .scenario import load_scenario
@@ -35,7 +35,7 @@ class Holdout:
 
     def _read(self) -> dict:
         try:
-            data = json.loads(self.path.read_text(encoding="utf-8"))
+            data = json.loads(atomic.read_text(self.path))
         except (OSError, ValueError):
             return {"scenarios": [], "tests": []}
         if not isinstance(data, dict):
@@ -47,7 +47,7 @@ class Holdout:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temporary = self.path.with_suffix(".tmp")
         temporary.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-        os.replace(temporary, self.path)
+        atomic.replace(temporary, self.path)
 
     def keys(self) -> list[str]:
         return self._read()["scenarios"]

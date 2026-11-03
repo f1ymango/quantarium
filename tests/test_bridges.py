@@ -53,9 +53,10 @@ class CodexBridgeTests(unittest.TestCase):
 
     def turn(self, chat_id: str, text: str) -> dict:
         self.api.command("chat-send", {"id": chat_id, "text": text})
-        deadline = time.monotonic() + 60
+        deadline = time.monotonic() + 180
         while self.api.assistant.busy(chat_id) and time.monotonic() < deadline:
             time.sleep(0.05)
+        self.assertFalse(self.api.assistant.busy(chat_id), "the turn did not finish within 180 seconds")
         return self.api.get(f"agents/chats/{chat_id}", {})
 
     def test_two_turns_through_codex(self) -> None:

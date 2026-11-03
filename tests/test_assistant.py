@@ -59,9 +59,10 @@ class AssistantTests(unittest.TestCase):
         self.api.assistant.provider_for = lambda connection: provider
         chat = self.api.command("chat-create", {"connection_id": (connection or self.connection)["id"]})
         self.api.command("chat-send", {"id": chat["id"], "text": message, "page": "#/home"})
-        deadline = time.monotonic() + 30
+        deadline = time.monotonic() + 180
         while self.api.assistant.busy(chat["id"]) and time.monotonic() < deadline:
             time.sleep(0.02)
+        self.assertFalse(self.api.assistant.busy(chat["id"]), "the turn did not finish within 180 seconds")
         return self.api.get(f"agents/chats/{chat['id']}", {})
 
     def test_a_turn_runs_tools_through_the_agent_path(self) -> None:
@@ -118,6 +119,26 @@ class AssistantTests(unittest.TestCase):
         self.settings.disable()
         with self.assertRaises(agents.AgentsDisabled):
             self.api.command("chat-create", {"connection_id": self.connection["id"]})
+
+    def test_a_turn_whose_saves_fail_still_frees_the_chat(self) -> None:
+        # Once a busy flag outlived a failed save, every later send and delete said chat_busy.
+        self.api.assistant.provider_for = lambda connection: FakeProvider([text("Hello")])
+        chat = self.api.command("chat-create", {"connection_id": self.connection["id"]})
+        chats = self.api.assistant.chats
+        real = chats.save
+
+        def save(record: dict) -> dict:
+            if record["messages"][-1]["role"] == "user" and record.get("status") == "running":
+                return real(record)  # the user's message, saved before the turn starts
+            raise PermissionError(13, "Access is denied")
+
+        with mock.patch.object(chats, "save", save), mock.patch.object(threading, "excepthook", lambda args: None):
+            self.api.command("chat-send", {"id": chat["id"], "text": "Hi"})
+            deadline = time.monotonic() + 60
+            while self.api.assistant.busy(chat["id"]) and time.monotonic() < deadline:
+                time.sleep(0.02)
+        self.assertFalse(self.api.assistant.busy(chat["id"]), "the chat stayed busy after its turn ended")
+        self.api.command("chat-delete", {"id": chat["id"]})
 
     def test_parity_with_an_mcp_agent(self) -> None:
         """The same tool through MCP and through the assistant: same operation, outcome, and result."""

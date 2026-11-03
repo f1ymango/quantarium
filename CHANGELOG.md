@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.1.1 — 2026-11-03
+
+Save and read Quantarium's own files reliably on Windows while other threads, processes, or virus scanners have them open.
+
+- Quantarium saves a file by writing a temporary copy and moving it over the original. On Windows that move fails while anything has the original open, and opening the original fails while a move is under way; both raise `PermissionError`. A collision could fail a chat turn (status `error`, or a turn's last usage left unsaved), leave a Lab experiment `registered` instead of `stale`, or make agent settings read as empty, so agent features looked off and a bridge connection looked unknown. The new `quantarium/atomic.py` retries such clashes for up to 5 seconds on Windows only. Settings, chats, cells, the Lab ledger, holdout, proposals, onboarding, deciders, provenance, and agent-written scripts, along with the readers of those files, now go through it.
+- A chat turn whose final save failed kept the chat busy for good, so every later send or delete answered `chat_busy`. The busy flag is now cleared even when that save fails.
+- Tests that wait for a background turn now allow 180 seconds and fail with a clear message if the turn has not finished, instead of checking a turn that is still running.
+- New tests in `tests/test_atomic.py` and `tests/test_assistant.py`. On Windows, the concurrent-save tests fail without the retry, and the busy-flag test fails without its fix.
+
+**Results change:** None.
+
 ## v1.1.0 — 2026-11-03
 
 Check US price files against the NYSE calendar, and slice ranges from files whose symbols start on different dates.

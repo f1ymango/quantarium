@@ -13,12 +13,12 @@ exactly as it was. Progress lives in ``.quantarium/onboarding.json``.
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import threading
 from datetime import datetime, timezone
 from importlib import resources
 from typing import Callable
+from . import atomic
 
 STATE_FILE = ".quantarium/onboarding.json"
 TUTORIAL_ROOT = ".quantarium/tutorial"
@@ -63,7 +63,7 @@ class Onboarding:
         if not self.path.is_file():
             return None
         try:
-            data = json.loads(self.path.read_text(encoding="utf-8"))
+            data = json.loads(atomic.read_text(self.path))
         except (OSError, ValueError):
             return None
         if not isinstance(data, dict) or data.get("status") not in STATUSES:
@@ -79,7 +79,7 @@ class Onboarding:
         data["updated_utc"] = _now()
         temporary = self.path.with_suffix(".tmp")
         temporary.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-        os.replace(temporary, self.path)
+        atomic.replace(temporary, self.path)
         return data
 
     def state(self) -> dict:
@@ -149,7 +149,7 @@ class Onboarding:
                         or (root / "runs" / f"feed-{slug}.sqlite").exists())
             if key == "script":
                 path = root / f"{candidate}.py"
-                return path.exists() and path.read_bytes() != starter
+                return path.exists() and atomic.read_bytes(path) != starter
             return (root / f"{candidate}.sqlite").exists()
 
         names = {}
@@ -218,7 +218,7 @@ class Onboarding:
                     or relative.as_posix() == "runs/lab.sqlite"):
                 continue
             target = self.workspace.root / relative
-            if target.exists() and target.read_bytes() != source.read_bytes():
+            if target.exists() and atomic.read_bytes(target) != atomic.read_bytes(source):
                 raise ValueError(f"Cannot finish: {relative.as_posix()} already exists")
             copies.append((source, target))
         for source, target in copies:

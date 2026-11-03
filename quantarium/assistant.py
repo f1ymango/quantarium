@@ -11,7 +11,6 @@ proposals or change grants. Conversations are stored in ``.quantarium/chats/``.
 from __future__ import annotations
 
 import json
-import os
 import re
 import secrets
 import threading
@@ -19,6 +18,7 @@ import traceback
 from datetime import datetime, timezone
 from typing import Any, Callable
 
+from . import atomic
 from .errors import QuantariumError, NotFound
 from .mcp import INSTRUCTIONS, TOOLS, argument_problem, tier_of, tool_operation
 
@@ -59,7 +59,7 @@ class Chats:
     def get(self, chat_id: object) -> dict:
         path = self._path(chat_id)
         try:
-            return json.loads(path.read_text(encoding="utf-8"))
+            return json.loads(atomic.read_text(path))
         except FileNotFoundError:
             raise NotFound(f"Unknown chat: {chat_id}", "chat_not_found")
 
@@ -70,7 +70,7 @@ class Chats:
             path = self._path(chat["id"])
             temporary = path.with_suffix(".tmp")
             temporary.write_text(json.dumps(chat, indent=1) + "\n", encoding="utf-8")
-            os.replace(temporary, path)
+            atomic.replace(temporary, path)
             return chat
 
     def create(self, connection: dict) -> dict:
@@ -85,7 +85,7 @@ class Chats:
         chats = []
         for path in self.folder.glob("ch_*.json"):
             try:
-                chat = json.loads(path.read_text(encoding="utf-8"))
+                chat = json.loads(atomic.read_text(path))
             except (OSError, ValueError):
                 continue
             chats.append({key: chat.get(key) for key in ("id", "title", "connection_id", "connection_name",
@@ -98,7 +98,7 @@ class Chats:
         from .runtimes import remove_transcripts, remove_turn_folder
 
         try:
-            chat = json.loads(path.read_text(encoding="utf-8"))
+            chat = json.loads(atomic.read_text(path))
         except (OSError, ValueError):
             chat = {}
         bridge = chat.get("bridge") or {}
@@ -232,10 +232,13 @@ class Assistant:
             traceback.print_exc()
         finally:
             # Save the final state before clearing the busy flag, so a reader
-            # that sees the turn as finished also sees its result.
-            self.chats.save(chat)
-            with self._lock:
-                self._running.pop(chat_id, None)
+            # that sees the turn as finished also sees its result. A failed
+            # save must still clear the flag, or the chat stays busy for good.
+            try:
+                self.chats.save(chat)
+            finally:
+                with self._lock:
+                    self._running.pop(chat_id, None)
 
 
 class FakeProvider:

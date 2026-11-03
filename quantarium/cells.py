@@ -12,12 +12,12 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
-import os
 import re
 import secrets
 from datetime import datetime, timezone
 from pathlib import Path
 
+from . import atomic
 from .legacy import is_format
 from .config import _cells
 from .errors import QuantariumError, NotFound
@@ -64,14 +64,14 @@ class CellLibrary:
         path = self._path(record["id"])
         temporary = path.with_suffix(".tmp")
         temporary.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        os.replace(temporary, path)
+        atomic.replace(temporary, path)
         return record
 
     def get(self, cell_id: str) -> dict:
         path = self._path(cell_id)
         if not path.is_file():
             raise NotFound(f"Unknown cell: {cell_id}", "cell_not_found", "List cells with GET cells")
-        record = json.loads(path.read_text(encoding="utf-8"))
+        record = json.loads(atomic.read_text(path))
         if not is_format(record.get("format"), "cell"):
             raise ValueError(f"{path.name} is not a Quantarium cell")
         return record
@@ -319,7 +319,7 @@ class CellLibrary:
             allocator_script = (spec.get("allocator") or {}).get("script") \
                 if isinstance(spec.get("allocator"), dict) else None
             approved = [sleeve for sleeve in [*sleeves, *([{"script": allocator_script}] if allocator_script else [])]
-                        if hashlib.sha256(self.workspace.resolve(sleeve["script"]).read_bytes()).hexdigest()
+                        if hashlib.sha256(atomic.read_bytes(self.workspace.resolve(sleeve["script"]))).hexdigest()
                         == grant["approved_script_sha256"]]
             if not approved:
                 raise ValueError("The script approved for context.ask changed")
@@ -327,7 +327,7 @@ class CellLibrary:
 
             for sleeve in approved:
                 path = self.workspace.resolve(sleeve["script"])
-                if is_unreviewed(self.workspace.root, path.read_bytes(), self.workspace.key(path)):
+                if is_unreviewed(self.workspace.root, atomic.read_bytes(path), self.workspace.key(path)):
                     raise ValueError("A script an agent wrote must be reviewed before it may use context.ask")
             entry["ask"] = grant
         if entry["max_previous_volume_participation"] is None:

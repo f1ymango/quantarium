@@ -11,6 +11,8 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+from . import atomic
+
 
 def _parameters(node: ast.ClassDef) -> list[dict]:
     init = next((item for item in node.body
@@ -36,7 +38,7 @@ def _parameters(node: ast.ClassDef) -> list[dict]:
 
 def strategy_classes(path: Path) -> list[dict]:
     try:
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        tree = ast.parse(atomic.read_text(path), filename=str(path))
     except (SyntaxError, UnicodeDecodeError, OSError):
         return []
     return classes_in_tree(tree)
@@ -67,7 +69,7 @@ def find_class(path: Path, name: str | None) -> dict | None:
 def allocator_classes(path: Path) -> list[dict]:
     """Allocator classes in a file: top-level classes with an ``allocate`` method."""
     try:
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        tree = ast.parse(atomic.read_text(path), filename=str(path))
     except (SyntaxError, UnicodeDecodeError, OSError):
         return []
     found = []

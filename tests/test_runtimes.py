@@ -46,11 +46,12 @@ class RuntimeCase(unittest.TestCase):
         self.server.server_close()
         self.temp.cleanup()
 
-    def turn(self, chat_id: str, text: str, timeout: float = 60) -> dict:
+    def turn(self, chat_id: str, text: str, timeout: float = 180) -> dict:
         self.api.command("chat-send", {"id": chat_id, "text": text})
         deadline = time.monotonic() + timeout
         while self.api.assistant.busy(chat_id) and time.monotonic() < deadline:
             time.sleep(0.05)
+        self.assertFalse(self.api.assistant.busy(chat_id), f"the turn did not finish within {timeout:g} seconds")
         return self.api.get(f"agents/chats/{chat_id}", {})
 
     def runs(self) -> list[dict]:
@@ -143,7 +144,7 @@ class AcpTests(RuntimeCase):
         with self.environment("slow"):
             chat = self.api.command("chat-create", {"connection_id": connection["id"]})
             self.api.command("chat-send", {"id": chat["id"], "text": "Take your time"})
-            deadline = time.monotonic() + 20
+            deadline = time.monotonic() + 120
             while not any("prompt" in run for run in (self.runs() if self.record.exists() else [])):
                 self.assertLess(time.monotonic(), deadline)
                 time.sleep(0.05)

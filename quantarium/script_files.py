@@ -11,9 +11,9 @@ from __future__ import annotations
 
 import ast
 import hashlib
-import os
 from pathlib import Path
 
+from . import atomic
 from .errors import QuantariumError, NotFound
 from .provenance import record_agent_write
 from .scripts import classes_in_tree
@@ -65,7 +65,7 @@ class ScriptFiles:
         path = self.path(key)
         if not path.is_file():
             raise NotFound(f"Unknown script: {key}", "script_not_found", "GET scripts lists them")
-        data = path.read_bytes()
+        data = atomic.read_bytes(path)
         source = data.decode("utf-8")
         return {"key": key, "source": source, "sha256": sha256(data),
                 "check": check_source(source, str(key))}
@@ -82,7 +82,7 @@ class ScriptFiles:
         if len(data) > MAX_SCRIPT_BYTES:
             raise QuantariumError(f"Scripts are limited to {MAX_SCRIPT_BYTES} bytes", "script_too_large")
         if path.exists():
-            current = sha256(path.read_bytes())
+            current = sha256(atomic.read_bytes(path))
             if base_sha256 != current:
                 raise QuantariumError(f"{key} changed since it was read", "script_changed",
                                    f"Read it again with GET scripts/{key}, merge, and pass its sha256")
@@ -95,5 +95,5 @@ class ScriptFiles:
             record_agent_write(self.workspace.root, self.workspace.key(path), data, agent)
         temporary = path.with_name(path.name + ".tmp")
         temporary.write_bytes(data)
-        os.replace(temporary, path)
+        atomic.replace(temporary, path)
         return {"key": key, "sha256": sha256(data), "check": check_source(source, str(key))}
