@@ -16,6 +16,7 @@ from .analysis import read_analysis, write_curve_csv
 from .audit import audit_replay
 from .config import load_config, load_feed_config, load_live_config, strategy_root
 from .dashboard import write_dashboard
+from .data import CALENDARS
 from .engine import run_static
 from .export import export_feed_csv
 from .feed import provider_for, read_feed_report, run_feed_batch
@@ -62,6 +63,7 @@ def main() -> None:
     cut.add_argument("--tag", action="append", default=[], help="Label such as crash; repeatable")
     cut.add_argument("--actions", type=Path, help="Matching corporate-action CSV")
     cut.add_argument("--overwrite", action="store_true")
+    cut.add_argument("--calendar", choices=CALENDARS, help="Also check the slice's dates against this exchange calendar")
     generate = scenario_commands.add_parser("generate", help="Build a seeded synthetic market")
     generate.add_argument("spec", type=Path)
     generate.add_argument("output", type=Path)
@@ -272,7 +274,7 @@ def main() -> None:
             result = slice_scenario(args.source, args.output, args.start, args.through,
                                     name=args.name, description=args.description,
                                     tags=tuple(args.tag), actions=args.actions,
-                                    overwrite=args.overwrite)
+                                    overwrite=args.overwrite, calendar=args.calendar)
         elif args.scenario_command == "generate":
             spec = json.loads(args.spec.read_text(encoding="utf-8"))
             result = generate_scenario(spec, args.output, overwrite=args.overwrite)

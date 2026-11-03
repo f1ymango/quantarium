@@ -69,18 +69,18 @@ Futu limits how much candle history an account may request in a period, dependin
 
 ## Checking a fetched file
 
-A bar that passes the bridge's checks can still sit on the wrong day. The bridge refuses non-finite prices, inconsistent open, high, low, and close, and duplicate dates. Static replay and `scenario slice` read bars through `load_daily_csv`, which also does not compare dates with the NYSE calendar. Only the `csv` Feed does. Check a fetched file before research use:
+A bar that passes the bridge's checks can still sit on the wrong day. The bridge refuses non-finite prices, inconsistent open, high, low, and close, and duplicate dates. It does not compare dates with an exchange calendar, and neither do Static replay or `scenario slice` unless asked to. For US codes, slice with `--calendar nyse`, and add `"calendar": "nyse"` to the Static config, so that bars on holidays and skipped sessions stop the command. Check a fetched file before research use:
 
 - **First date per symbol.** Futu's daily history can start later than a fund's listing, so a multi-year request may return a shorter series for some codes. Look for the first date per symbol rather than assuming the requested `--from`.
-- **Sessions against the calendar.** Compare each symbol's dates with `quantarium.market_calendar.sessions(start, through)` over its own first-to-last span. A maintainer fetch of US ETF history from 2010 showed two kinds of fault in 2010–2013, and none after:
+- **Sessions against the calendar.** `--calendar nyse` and `"calendar": "nyse"` check the dates of the whole slice or price file. For one symbol at a time, compare its dates with `quantarium.market_calendar.sessions(start, through)` over its own first-to-last span. A maintainer fetch of US ETF history from 2010 showed two kinds of fault in 2010–2013, and none after:
   - bars dated on exchange holidays, copying the previous session's prices, one of them with an implausible low;
   - missing sessions, often the session before a holiday.
 
   The affected codes were not all the same.
 - **Large one-day moves.** List close-to-close moves above about 8% and check each against known market events. A holiday-dated fault shows up as a large drop followed by a matching rebound.
-- **Every session for every symbol.** `load_daily_csv` and `scenario slice` require each requested symbol on every session of the **whole source file**, not only the sliced window. When symbols start on different dates, first copy the rows from the chosen start date into a new local file under `data/`, then slice from that file.
+- **Every session for every symbol.** A Static run needs each of its symbols on every session of the price file. `scenario slice` needs them only inside the sliced range, so a symbol whose history starts later can still be sliced from its first full year.
 
-If the faults are confined to early years, start the research window after the last one rather than editing provider bars by hand. For a research and holdout split, slice the trimmed file twice into ignored `scenarios/`, for example the research years and then the final year, and point the private Static config's `data_path` at the research scenario's `prices.csv`.
+If the faults are confined to early years, start the research window after the last one rather than editing provider bars by hand. For a research and holdout split, slice the fetched file twice into ignored `scenarios/` with `--calendar nyse`, for example the research years and then the final year. Then point the private Static config's `data_path` at the research scenario's `prices.csv`, with `"calendar": "nyse"`.
 
 ## Connection troubleshooting
 

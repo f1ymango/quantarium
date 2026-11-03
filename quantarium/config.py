@@ -10,6 +10,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from types import MappingProxyType
 
+from .data import CALENDARS
 from .model import CellSpec, CostModel, FeedSpec, LiveSpec, RunSpec, StrategySpec
 from .userdata import INDEX
 from .provider import NEW_YORK
@@ -194,11 +195,20 @@ def load_config(path: Path) -> tuple[RunSpec, str]:
         actions_path=(str((root / source["actions_path"]).resolve())
                       if source.get("actions_path") else None),
         costs=cost_model(source),
+        calendar=_calendar(source),
         **_universe_settings(source, root, cells),
     )
     if spec.slippage_bps >= 10_000:
         raise ValueError("slippage_bps must be below 10000")
     return spec, raw
+
+
+def _calendar(source: dict) -> str | None:
+    """A Static config's optional exchange calendar, checked against the price file's dates."""
+    calendar = source.get("calendar")
+    if calendar is not None and calendar not in CALENDARS:
+        raise ValueError(f"calendar must be one of: {', '.join(CALENDARS)}")
+    return calendar
 
 
 def _universe_settings(source: dict, root: Path, cells: tuple[CellSpec, ...]) -> dict:

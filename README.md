@@ -4,7 +4,7 @@
 
 **Test a trading idea honestly, on your own or with AI agents, before you believe it.**
 
-**Version: 1.0.12.** See the [changelog](CHANGELOG.md) for its contents and known limits. Licensed for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md).
+**Version: 1.1.0.** See the [changelog](CHANGELOG.md) for its contents and known limits. Licensed for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md).
 
 Quantarium is a local lab for testing stock-portfolio strategies. It simulates trading and never places real orders. It runs on your computer, listens only on a loopback address, and its core uses only Python's standard library.
 
@@ -279,6 +279,8 @@ The layout is detected from the header: `yahoo`, `nasdaq` (`$` prices and `MM/DD
 
 Download sites usually publish **split-adjusted** prices, so do not add split actions to imported bars. By default dividends are left out, giving a price return. `--price-basis adjusted` (Yahoo only) rescales each bar by `Adj Close / Close` to approximate total return. Use the result directly as a Static `data_path`, or cut periods such as 2008 or 2020 into scenarios with `scenario slice`. Survivorship bias still applies to symbols picked from today's lists.
 
+Static replay does not compare a price file's dates with any exchange calendar by default, because files from other markets are allowed. For US data, add `"calendar": "nyse"` to a Static config. The run then refuses bars dated on NYSE holidays and NYSE sessions the file skips between its first and last dates, using the same offline calendar as the `csv` Feed (1998 on, with known special closures). The check changes no results: a file that passes it replays exactly as before.
+
 For a forward test on real data, point Feed Batch at the file and append newly downloaded days:
 
 ```json
@@ -419,7 +421,7 @@ python -m quantarium scenario transform scenarios/steady_bull examples/scenarios
 python -m quantarium scenario show scenarios/bull_with_crash
 ```
 
-- **`slice`** cuts a date range from real daily bars, such as an `export-feed` CSV from a Feed Batch backfill, and keeps actions whose ex-date falls inside the range. The result has kind `historical`. Alpaca stock history starts in 2016, so 2020 and 2022 are reachable from it but 2008 is not.
+- **`slice`** cuts a date range from real daily bars, such as an `export-feed` CSV from a Feed Batch backfill, and keeps actions whose ex-date falls inside the range. The result has kind `historical`. Every bar in the source must be valid, but each symbol needs a bar on every session only inside the range, so symbols may start or end outside it. `--calendar nyse` also refuses a slice with bars on NYSE holidays or skipped NYSE sessions, and records the check in the manifest. Alpaca stock history starts in 2016, so 2020 and 2022 are reachable from it but 2008 is not.
 - **`generate`** builds a seeded `synthetic` market from a JSON spec ([example](examples/scenarios/specs/recession_bear.json)). Its segments set annual drift and volatility. Symbols move together through a shared market factor with per-symbol `beta` and idiosyncratic volatility. Sessions are weekdays with no holidays. The same spec and seed produce the same file.
 - **`transform`** applies recorded operations to an existing scenario and produces kind `transformed`:
   - `shock`: a drawdown over N sessions from a date, with optional partial recovery;

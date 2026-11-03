@@ -18,7 +18,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Mapping
 
-from .data import load_actions_csv, load_daily_csv
+from .data import check_calendar, load_actions_csv, load_daily_csv
 from .journal import Journal
 from .legacy import current_entrypoint, current_value
 from .userdata import Delisting, check_delistings, parse_delistings, parse_membership, symbol_spans
@@ -1043,6 +1043,7 @@ def run_static(spec: RunSpec, config_json: str, strategy_root: Path,
         days, tape, data_hash = _universe_tape(Path(spec.data_path), symbols, spec.symbol_map)
     else:
         days, tape, data_hash = load_daily_csv(Path(spec.data_path), symbols, spec.symbol_map)
+    check_calendar(days, spec.calendar)
     universe = _universe(spec, days, tape, symbols) if spec.changing_universe else None
     if universe is not None:
         metadata = {**(metadata or {}), "changing_universe": {

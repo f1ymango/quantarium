@@ -10,7 +10,28 @@ from datetime import date
 from pathlib import Path
 from typing import Mapping
 
+from . import market_calendar
 from .model import Bar, CorporateAction
+
+# Exchange calendars a price file can be checked against.
+CALENDARS = ("nyse",)
+
+
+def check_calendar(days: list[date], calendar: str | None) -> None:
+    """Refuse sorted ``days`` that the calendar has no session for, or that skip one of its sessions."""
+    if calendar is None or not days:
+        return
+    if calendar not in CALENDARS:
+        raise ValueError(f"Unknown calendar {calendar!r}; choose one of: {', '.join(CALENDARS)}")
+    if days[0].year < market_calendar.FIRST_YEAR:
+        raise ValueError(f"The NYSE calendar covers {market_calendar.FIRST_YEAR} on; the file starts on {days[0]}")
+    expected = market_calendar.sessions(days[0], days[-1])
+    extra = sorted(set(days) - expected)
+    if extra:
+        raise ValueError(f"Bars on {extra[0]}, which is not an NYSE session ({len(extra)} such dates)")
+    missing = sorted(expected - set(days))
+    if missing:
+        raise ValueError(f"No bars on NYSE session {missing[0]} ({len(missing)} sessions missing)")
 
 
 def validate_bar(bar: Bar) -> None:

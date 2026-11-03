@@ -253,6 +253,8 @@ class RunSpec:
     changing_universe: bool = False
     delistings_path: str | None = None
     membership_path: str | None = None
+    # An exchange calendar the price file's dates must match, such as "nyse"; None skips the check.
+    calendar: str | None = None
 
 
 @dataclass(frozen=True)

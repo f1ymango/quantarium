@@ -19,7 +19,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from .legacy import is_format
-from .data import load_daily_csv, validate_bar
+from .data import check_calendar, load_daily_csv, validate_bar
 from .market_calendar import sessions
 from .model import Bar
 
@@ -206,15 +206,26 @@ def _write(directory: Path, *, name: str, description: str, kind: str,
 
 def slice_scenario(source: Path, directory: Path, start: date, through: date, *,
                    name: str, description: str = "", tags: tuple[str, ...] = (),
-                   actions: Path | None = None, overwrite: bool = False) -> Scenario:
-    """Cut a date range out of real daily bars, such as a Feed Batch export."""
+                   actions: Path | None = None, overwrite: bool = False,
+                   calendar: str | None = None) -> Scenario:
+    """Cut a date range out of real daily bars, such as a Feed Batch export.
+
+    Every bar in the file is validated, but only the slice needs every symbol
+    on every session, so symbols may start or end outside it. ``calendar``
+    also checks the slice's dates against an exchange calendar.
+    """
     if start > through:
         raise ValueError("Slice start must not follow its end")
     symbols = _csv_symbols(source)
-    days, tape, _ = load_daily_csv(source, symbols)
+    days, tape, _ = load_daily_csv(source, symbols, every_session=False)
     selected = {day: tape[day] for day in days if start <= day <= through}
     if not selected:
         raise ValueError(f"No sessions between {start} and {through} in {source}")
+    for day, bars in selected.items():
+        missing = symbols - bars.keys()
+        if missing:
+            raise ValueError(f"Missing daily bars on {day}: {', '.join(sorted(missing))}")
+    check_calendar(sorted(selected), calendar)
     action_rows: list[dict] = []
     fields: list[str] | None = None
     if actions is not None:
@@ -230,6 +241,8 @@ def slice_scenario(source: Path, directory: Path, start: date, through: date, *,
         "method": "slice", "source_file": source.name, "source_sha256": _sha256(source),
         "from": start.isoformat(), "through": through.isoformat(),
     }
+    if calendar is not None:
+        provenance["calendar"] = calendar
     if actions is not None:
         provenance["source_actions_sha256"] = _sha256(actions)
     return _write(directory, name=name, description=description, kind="historical",

@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.1.0 — 2026-11-03
+
+Check US price files against the NYSE calendar, and slice ranges from files whose symbols start on different dates.
+
+- Static configs accept `"calendar": "nyse"`. The run then refuses bars dated on NYSE holidays and NYSE sessions skipped between the file's first and last dates. The check is off unless named, because Static files from other markets are allowed.
+- `scenario slice --calendar nyse` applies the same check to the slice and records it in the manifest's provenance.
+- `scenario slice` now needs every symbol on every session only inside the requested range, not across the whole source file. Every bar in the file is still validated.
+- New tests in `tests/test_calendar_check.py`. Each fails with the previous engine, config loader, or slicer.
+
+**Results change:** None. Files that ran or sliced before give the same fills, equity, and scenarios. The calendar check only refuses files it is asked to check.
+
 ## v1.0.12 — 2026-11-03
 
 Document how to check a fetched Futu file before research use.
