@@ -67,6 +67,21 @@ Use the **Quantarium** Python environment, not the separate Futu bridge environm
 
 Futu limits how much candle history an account may request in a period, depending on the account; its OpenAPI documentation gives the current quota. For raw prices, fetch a long history once and then append with `--adjust none`. For forward-adjusted prices, re-fetch the full range after a corporate action.
 
+## Checking a fetched file
+
+A bar that passes the bridge's checks can still sit on the wrong day. The bridge refuses non-finite prices, inconsistent open, high, low, and close, and duplicate dates. Static replay and `scenario slice` read bars through `load_daily_csv`, which also does not compare dates with the NYSE calendar. Only the `csv` Feed does. Check a fetched file before research use:
+
+- **First date per symbol.** Futu's daily history can start later than a fund's listing, so a multi-year request may return a shorter series for some codes. Look for the first date per symbol rather than assuming the requested `--from`.
+- **Sessions against the calendar.** Compare each symbol's dates with `quantarium.market_calendar.sessions(start, through)` over its own first-to-last span. A maintainer fetch of US ETF history from 2010 showed two kinds of fault in 2010–2013, and none after:
+  - bars dated on exchange holidays, copying the previous session's prices, one of them with an implausible low;
+  - missing sessions, often the session before a holiday.
+
+  The affected codes were not all the same.
+- **Large one-day moves.** List close-to-close moves above about 8% and check each against known market events. A holiday-dated fault shows up as a large drop followed by a matching rebound.
+- **Every session for every symbol.** `load_daily_csv` and `scenario slice` require each requested symbol on every session of the **whole source file**, not only the sliced window. When symbols start on different dates, first copy the rows from the chosen start date into a new local file under `data/`, then slice from that file.
+
+If the faults are confined to early years, start the research window after the last one rather than editing provider bars by hand. For a research and holdout split, slice the trimmed file twice into ignored `scenarios/`, for example the research years and then the final year, and point the private Static config's `data_path` at the research scenario's `prices.csv`.
+
 ## Connection troubleshooting
 
 If the SDK reports `WSAECONNREFUSED` on Windows, first check the **local** OpenD listener. Open the GUI, sign in until it shows Connected, and verify that its API IP is `127.0.0.1` and API Port matches the bridge's `--port` (default `11111`). In PowerShell:

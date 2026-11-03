@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.12 — 2026-11-03
+
+Document how to check a fetched Futu file before research use.
+
+- A maintainer fetch of multi-year US ETF history showed shorter histories for some codes, holiday-dated bars copying the previous session, and missing sessions in 2010–2013, none afterwards. The bridge's checks and `load_daily_csv` accept such bars, since only the `csv` Feed compares dates with the NYSE calendar.
+- `docs/futu-bridge.md` gains a checklist: first date per symbol, sessions against `quantarium.market_calendar`, large one-day moves, and trimming the source file before `scenario slice`, which requires every symbol on every session of the whole file. It also describes a research and holdout split in ignored `scenarios/`.
+- No code changed. No provider prices, derived datasets, or account details were added to the repository.
+
+**Results change:** None.
+
 ## v1.0.11 — 2026-10-29
 
 Record the first local Futu connection check and its setup lessons.
